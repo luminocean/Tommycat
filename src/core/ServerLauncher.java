@@ -34,6 +34,9 @@ public class ServerLauncher {
 			//进入等待状态
 			Socket socket = serverSocket.accept();
 			
+			//设置read操作的阻塞时间
+			socket.setSoTimeout(1000);
+			
 			//完成socket连接后，获取输入输出流
 			InputStream is = socket.getInputStream();
 			OutputStream os = socket.getOutputStream();
