@@ -11,11 +11,11 @@ import java.util.Arrays;
 
 import util.Logger;
 
-public class Tester {
+public class ClientTest {
 
 	public static void main(String[] args){
 		try {
-			new Tester().run();
+			new ClientTest().run();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -43,7 +43,7 @@ public class Tester {
 				
 				String response = new String(responseInChar);
 				
-				Logger.debug("获取响应："+ response);
+				Logger.debug("获取响应：\n"+ response);
 				
 				break;
 			}
@@ -54,7 +54,7 @@ public class Tester {
 
 
 	private void writeContent(PrintWriter writer) {
-		writer.println("OPTIONS /msg.txt HTTP/1.1");
+		writer.println("OPTIONS / HTTP/1.1");
 		writer.println("Host: 127.0.0.1:8080");
 		writer.println("User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0");
 		writer.println("Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");

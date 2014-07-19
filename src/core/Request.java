@@ -32,7 +32,16 @@ public class Request {
 		if( headLineParts.length<3 )
 			throw new Exception("首行解析失败！");
 		
-		return headLineParts[1];
+		String targetURI = headLineParts[1];
+		
+		if( targetURI.indexOf("/") == 0 ){
+			if( targetURI.length() > 1)
+				targetURI = targetURI.substring(1);
+			else
+				targetURI = "";
+		}
+		
+		return targetURI;
 	}
 	
 	

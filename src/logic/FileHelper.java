@@ -24,6 +24,6 @@ public class FileHelper {
 	}
 
 	public static String getWebAppFileContent(String webAppPath) throws Exception {
-		return getFileContent(Constants.WEB_ROOT+webAppPath);
+		return getFileContent(Constants.WEB_ROOT+"/"+ webAppPath);
 	}
 }
