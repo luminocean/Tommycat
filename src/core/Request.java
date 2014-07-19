@@ -9,7 +9,7 @@ import util.Logger;
 public class Request {
 	private static final int BUFFER_SIZE = 2048;
 	private String content;
-	private String uri;
+	private String uri;	//此uri就是http请求里面带的uri，没有变化！
 	
 	public Request(InputStream is) throws Exception{
 		StringBuilder builder = new StringBuilder();
@@ -53,13 +53,6 @@ public class Request {
 		
 		String targetURI = headLineParts[1];
 		
-		if( targetURI.indexOf("/") == 0 ){
-			if( targetURI.length() > 1)
-				targetURI = targetURI.substring(1);
-			else
-				targetURI = "";
-		}
-		
 		return targetURI;
 	}
 	
@@ -70,5 +63,17 @@ public class Request {
 	
 	public String getUri() {
 		return uri;
+	}
+	
+	public String getRelativeUri(){
+		String relativeUri = uri;
+		if( relativeUri.startsWith("/") ){
+			if( relativeUri.length()>1  )
+				relativeUri = relativeUri.substring(1);
+			else
+				relativeUri = "";
+		}
+		
+		return relativeUri;
 	}
 }

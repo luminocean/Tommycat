@@ -1,4 +1,4 @@
-package logic;
+package os;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,6 +24,7 @@ public class FileHelper {
 	}
 
 	public static String getWebAppFileContent(String webAppPath) throws Exception {
-		return getFileContent(Constants.WEB_ROOT+"/"+ webAppPath);
+		//webAppPath里面是带有根目录的/的！这一点千万注意别把它给去掉了！
+		return getFileContent(Constants.WEB_ROOT+ webAppPath);
 	}
 }

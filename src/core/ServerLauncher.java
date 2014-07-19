@@ -30,12 +30,9 @@ public class ServerLauncher {
 		
 		while(true){
 			if( isShutdown ) break;
-			
 			//进入等待状态
 			Socket socket = serverSocket.accept();
-			
-			//设置read操作的阻塞时间
-			socket.setSoTimeout(1000);
+			socket.setSoTimeout(1000);	//设置read操作的阻塞时间
 			
 			//完成socket连接后，获取输入输出流
 			InputStream is = socket.getInputStream();
@@ -43,7 +40,8 @@ public class ServerLauncher {
 			
 			//读取客户端传输过来的内容
 			Request req = new Request(is);
-			Logger.debug("客户端传来内容：\n"+req.toString());
+			
+			String uri = req.getUri();
 			
 			//向客户端发送响应
 			Response res = new Response(os, req);

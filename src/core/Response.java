@@ -2,9 +2,9 @@ package core;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
+import os.FileHelper;
 import util.Constants;
 import util.Logger;
-import logic.FileHelper;
 
 
 public class Response {
@@ -19,14 +19,14 @@ public class Response {
 	public void send() {
 		//获取目标uri，如果是请求根目录则手动将其跳转到index.html上面去
 		String uri = request.getUri();
-		if( uri.equals("") ){
-			uri = "index.html";
+		if( uri.equals("/") ){
+			uri = "/index.html";
 		}
 		
 		String fileContent = "";
 		try{
 			fileContent = FileHelper.getWebAppFileContent(uri);
-			Logger.debug("读取的文件内容："+ fileContent);
+			Logger.debug("读取请求的文件内容："+ fileContent);
 			
 			writeResponse(os, fileContent);
 		}catch(Exception e){
