@@ -29,22 +29,22 @@ public class ServerLauncher {
 			if( isShutdown ) break;
 			
 			//进入等待状态
+			Logger.debug("服务器已启动");
 			Socket socket = serverSocket.accept();
-
+			
 			//完成socket连接后，获取输入输出流
 			InputStream is = socket.getInputStream();
 			OutputStream os = socket.getOutputStream();
 			
 			//读取客户端传输过来的内容
-			String content = new Request(is).toString();
+			Request req = new Request(is);
+			Logger.debug("客户端传来内容："+req.toString());
 			
-			Logger.debug("客户端传来内容："+content);
+			//向客户端发送响应
+			Response res = new Response(os);
+			res.send();
 			
-			//设置自动flush，这样就不用手动flush了
-			PrintWriter writer = new PrintWriter(os, true); 
-			//向客户端写回一条信息表示响应
-			writer.println("GOT IT");
-			
+			//连接结束
 			socket.close();
 		}
 		
