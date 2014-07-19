@@ -29,10 +29,10 @@ public class Tester {
 		OutputStream os = socket.getOutputStream();
 		InputStream is = socket.getInputStream();
 		
-		PrintWriter writer = new PrintWriter(os, true);
+		PrintWriter writer = new PrintWriter(os);
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 		
-		writer.println("TEST_MSG");
+		writeContent(writer);
 		
 		while(true){
 			if( reader.ready() ){
@@ -50,6 +50,24 @@ public class Tester {
 		}
 		
 		socket.close();
+	}
+
+
+	private void writeContent(PrintWriter writer) {
+		writer.println("OPTIONS /msg.txt HTTP/1.1");
+		writer.println("Host: 127.0.0.1:8080");
+		writer.println("User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0");
+		writer.println("Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+		writer.println("Accept-Language: zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3");
+		writer.println("Accept-Encoding: gzip, deflate");
+		writer.println("Access-Control-Request-Method: GET");
+		writer.println("Access-Control-Request-Headers: cache-control,if-modified-since,if-none-match");
+		writer.println("Connection: keep-alive");
+		
+		//Header之后的空行
+		writer.println();
+		
+		writer.flush();
 	}
 
 }

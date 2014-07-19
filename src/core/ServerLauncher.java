@@ -1,3 +1,4 @@
+package core;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -22,6 +23,8 @@ public class ServerLauncher {
 	}
 
 	private void run() throws Exception {
+		Logger.debug("服务器启动");
+		
 		//把服务器Socket绑定在本地
 		ServerSocket serverSocket = new ServerSocket(8080, 1, InetAddress.getByName("127.0.0.1"));
 		
@@ -29,7 +32,6 @@ public class ServerLauncher {
 			if( isShutdown ) break;
 			
 			//进入等待状态
-			Logger.debug("服务器已启动");
 			Socket socket = serverSocket.accept();
 			
 			//完成socket连接后，获取输入输出流
@@ -38,10 +40,10 @@ public class ServerLauncher {
 			
 			//读取客户端传输过来的内容
 			Request req = new Request(is);
-			Logger.debug("客户端传来内容："+req.toString());
+			Logger.debug("客户端传来内容：\n"+req.toString());
 			
 			//向客户端发送响应
-			Response res = new Response(os);
+			Response res = new Response(os, req);
 			res.send();
 			
 			//连接结束
