@@ -1,0 +1,5 @@
+· 当前部署的Web项目是绑定在Mushroom下面的，也就是说只有Mushroom项目能起作用
+· 在请求servlet的时候，请求长得像这样：/servlet/MainSerlet
+	- 现在解析的做法就是去掉/servlet/，得到servlet名字MainSerlet
+	- 但是在mushroom项目下面的servlet是在一个叫servlet的包下面的（名字一样。。。）
+	- 因此还要补上一个 sevlet. 的前缀构造出一个包名，否则会导致sevlet名字和自己所在的包名字不一致，出现NoClassDefFound异常

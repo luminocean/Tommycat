@@ -1,12 +1,11 @@
 package core;
 
-import java.io.IOException;
-
 import javax.servlet.Servlet;
-import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import facade.RequestFacade;
+import facade.ResponseFacade;
 import os.ServletLoader;
 
 public class ServletProcessor {
@@ -15,16 +14,19 @@ public class ServletProcessor {
 	
 	public void process(Request request, Response response) {
 		String uri = request.getUri();
-		
 		String servletName = getServletName(uri);
 		
+		//加载Servlet
 		Servlet servlet = servletLoader.loadServlet(servletName);
+		
+		//将request和response使用facade包装，增加其安全性
+		ServletRequest servletRequest = (ServletRequest) new RequestFacade(request);
+		ServletResponse servletResponse = (ServletResponse) new ResponseFacade(response);
 		
 		//尝试调用Servlet执行
 		try {
-			servlet.service((ServletRequest)request, (ServletResponse)response);
+			servlet.service( servletRequest, servletResponse );
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -39,11 +41,17 @@ public class ServletProcessor {
 		String servletName = null;
 		
 		//首先必须要是/servlet开头的
-		if( uri.indexOf("/servlet")==0 ){
-			servletName = uri.replace("/servlet", "");
-			if( servletName.startsWith("/") )
-				servletName = servletName.substring(1);
+		if( !(uri.indexOf("/servlet")==0) ){
+			return null;
 		}
+		
+		//将/servlet前缀去掉
+		servletName = uri.replace("/servlet", "");
+		if( servletName.startsWith("/") )
+			servletName = servletName.substring(1);
+		
+		//由于请求的都是 /servlet/xxx 的形式，但是实际上xxx一般是在一个包里面的，因此在这里补上一个包名，默认是servlet
+		servletName = "servlet."+servletName;
 		
 		return servletName;
 	}

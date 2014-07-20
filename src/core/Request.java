@@ -3,10 +3,13 @@ import java.io.InputStream;
 import java.net.SocketTimeoutException;
 import java.util.Arrays;
 
+import javax.servlet.Servlet;
+import javax.servlet.ServletRequest;
+
 import util.Logger;
 
 
-public class Request {
+public class Request{
 	private static final int BUFFER_SIZE = 2048;
 	private String content;
 	private String uri;	//此uri就是http请求里面带的uri，没有变化！

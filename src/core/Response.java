@@ -10,7 +10,7 @@ import util.Logger;
 public class Response {
 	private OutputStream os;
 	private Request request;
-
+	
 	public Response(OutputStream os, Request request) {
 		this.os = os;
 		this.request = request;
@@ -61,5 +61,11 @@ public class Response {
 		
 		writer.flush();
 	}
-
+	
+	public PrintWriter getWriter() {
+		//送出去之前先开启自动flush, 防止使用方忘记flush
+		PrintWriter writer = new PrintWriter(os, true);
+		
+		return writer;
+	}
 }

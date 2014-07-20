@@ -60,6 +60,7 @@ public class ServerLauncher {
 	private void dispatch(Request request, Response response) {
 		String uri = request.getUri();
 		
+		//判断该请求该何去何从
 		if( uri.startsWith("/servlet/") ){
 			//进入servlet处理路线，将request和response传入处理器
 			ServletProcessor processor = new ServletProcessor();
