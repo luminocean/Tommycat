@@ -16,7 +16,10 @@ public class Response {
 		this.request = request;
 	}
 
-	public void send() {
+	/**
+	 * 发送静态资源
+	 */
+	public void sendStaticResource() {
 		//获取目标uri，如果是请求根目录则手动将其跳转到index.html上面去
 		String uri = request.getUri();
 		if( uri.equals("/") ){

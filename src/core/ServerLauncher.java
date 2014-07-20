@@ -38,19 +38,36 @@ public class ServerLauncher {
 			InputStream is = socket.getInputStream();
 			OutputStream os = socket.getOutputStream();
 			
-			//读取客户端传输过来的内容
-			Request req = new Request(is);
+			//根据两个流创建request和response
+			Request request = new Request(is);
+			Response response = new Response(os, request);
 			
-			String uri = req.getUri();
-			
-			//向客户端发送响应
-			Response res = new Response(os, req);
-			res.send();
+			//开始分发请求
+			dispatch(request, response);
 			
 			//连接结束
 			socket.close();
 		}
 		
 		serverSocket.close();
+	}
+
+	/**
+	 * 分发请求，为请求找到合适的处理器，处理并发回响应
+	 * @param request
+	 * @param response
+	 */
+	private void dispatch(Request request, Response response) {
+		String uri = request.getUri();
+		
+		if( uri.startsWith("/servlet/") ){
+			//进入servlet处理路线，将request和response传入处理器
+			ServletProcessor processor = new ServletProcessor();
+			processor.process(request, response);
+		}else{
+			//进入静态资源处理路线
+			//向客户端发送响应
+			response.sendStaticResource();
+		}
 	}
 }
