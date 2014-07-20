@@ -13,7 +13,7 @@ public class ServletLoaderTest {
 	public static void main(String[] args) {
 		ServletLoader loader = new ServletLoader();
 		
-		Servlet servlet = loader.loadServlet("PrimitiveServlet");
+		Servlet servlet = loader.loadServlet("servlet.ToyServlet");
 		
 		try {
 			servlet.service(null, null);
