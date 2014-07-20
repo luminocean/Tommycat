@@ -1,17 +1,32 @@
 package core;
 
-import api.Servlet;
+import java.io.IOException;
+
+import javax.servlet.Servlet;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+
 import os.ServletLoader;
 
 public class ServletProcessor {
 	private ServletLoader servletLoader = new ServletLoader();
 
+	
 	public void process(Request request, Response response) {
 		String uri = request.getUri();
 		
 		String servletName = getServletName(uri);
 		
 		Servlet servlet = servletLoader.loadServlet(servletName);
+		
+		//尝试调用Servlet执行
+		try {
+			servlet.service((ServletRequest)request, (ServletResponse)response);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -28,7 +43,6 @@ public class ServletProcessor {
 			servletName = uri.replace("/servlet", "");
 			if( servletName.startsWith("/") )
 				servletName = servletName.substring(1);
-			return servletName;
 		}
 		
 		return servletName;

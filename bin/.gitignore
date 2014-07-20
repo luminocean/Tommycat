@@ -1,9 +1,7 @@
-/Request.class
-/ServerLauncher.class
-/test
-/util
-/Response.class
-/core
-/logic
-/api
 /os
+/servlet
+/test
+/core
+/util
+/javax
+/api
