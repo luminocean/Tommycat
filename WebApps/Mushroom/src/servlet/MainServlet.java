@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
@@ -25,7 +26,9 @@ public class MainServlet implements Servlet{
 	@Override
 	public void service(ServletRequest req, ServletResponse res)
 			throws ServletException, IOException {
-		res.getWriter().write("Welcome to the user servlet domain~~");
+		System.out.println("-- 用户Servlet运行 --");
+		PrintWriter w = res.getWriter();
+		w.println("Welcome to the user servlet domain~~");
 	}
 
 	@Override

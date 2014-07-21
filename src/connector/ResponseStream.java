@@ -33,10 +33,9 @@ public class ResponseStream extends OutputStream{
 	public void write(String s) throws IOException {
 		byte[] bytes = s.getBytes();
 		
-		this.write(bytes);
+		write(bytes);
 	}
 
-	
 	/**
 	 * 响应过程中最后需要调用的方法
 	 * 将缓存中的所有数据全部输出到socket的输出流中（包括响应头）
@@ -44,14 +43,17 @@ public class ResponseStream extends OutputStream{
 	 * @throws IOException 
 	 */
 	public void flushAll() throws IOException{
-		PrintWriter writer = new PrintWriter(os);
+		//要注意的是输出过程中只能用这一个writer，不要一会用writer一会又用os，因为writer里面是否缓存的，而flush只能用一次，切记
+		PrintWriter writer = new PrintWriter(os, false);
 		//输出响应头部
 		int bufferSize = buffer.size();
 		writer.println("HTTP/1.1 200 OK");
 		writer.println("Content-Type: text/html;charset=utf-8");
 		writer.println("Content-Length: "+bufferSize);
+
 		//不可缺少的空行
 		writer.println();
+		
 		//输出报文体
 		writer.print(new String(buffer.toByteArray()));
 		//一次性的flush,否则连浏览器都会出问题

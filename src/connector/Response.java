@@ -54,10 +54,8 @@ public class Response {
 	}
 	
 	public PrintWriter getWriter() {
-		//送出去之前先开启自动flush, 防止使用方忘记flush
-		//PrintWriter writer = new PrintWriter(os, true);
-		
-		PrintWriter writer = new PrintWriter(responseStream, false);
+		//注意这里的flush只适用于部分的输出方法，不是全部！比如println
+		PrintWriter writer = new PrintWriter(responseStream, true);
 		
 		return writer;
 	}
