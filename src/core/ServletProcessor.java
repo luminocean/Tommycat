@@ -28,6 +28,8 @@ public class ServletProcessor {
 		//尝试调用Servlet执行
 		try {
 			servlet.service( servletRequest, servletResponse );
+			
+			response.finishResponse();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

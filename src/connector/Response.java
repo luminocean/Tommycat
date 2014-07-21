@@ -1,4 +1,5 @@
 package connector;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
@@ -20,6 +21,8 @@ public class Response {
 	public Response(OutputStream os, Request request) {
 		this.os = os;
 		this.request = request;
+		
+		this.responseStream = new ResponseStream(os);
 	}
 
 	/**
@@ -37,11 +40,26 @@ public class Response {
 			fileContent = FileHelper.getWebAppFileContent(uri);
 			Logger.debug("读取请求的文件内容："+ fileContent);
 			
-			writeResponse(os, fileContent);
+			responseStream.write(fileContent);
+			
+			finishResponse();
+			//writeResponse(os, fileContent);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	public void finishResponse() throws IOException{
+		responseStream.flushAll();
+	}
+	
+	public PrintWriter getWriter() {
+		//送出去之前先开启自动flush, 防止使用方忘记flush
+		//PrintWriter writer = new PrintWriter(os, true);
 		
+		PrintWriter writer = new PrintWriter(responseStream, false);
+		
+		return writer;
 	}
 
 	private void writeResponse(OutputStream os, String body) {
@@ -57,7 +75,6 @@ public class Response {
 		writer.flush();
 	}
 
-
 	private void writeHead(OutputStream os, int length) {
 		PrintWriter writer = new PrintWriter(os);
 		
@@ -68,10 +85,4 @@ public class Response {
 		writer.flush();
 	}
 	
-	public PrintWriter getWriter() {
-		//送出去之前先开启自动flush, 防止使用方忘记flush
-		PrintWriter writer = new PrintWriter(os, true);
-		
-		return writer;
-	}
 }
