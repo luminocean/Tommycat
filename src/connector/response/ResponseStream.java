@@ -1,4 +1,4 @@
-package connector;
+package connector.response;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

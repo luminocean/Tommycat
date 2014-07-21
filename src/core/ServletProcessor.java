@@ -4,10 +4,10 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import connector.Request;
-import connector.Response;
-import connector.facade.RequestFacade;
-import connector.facade.ResponseFacade;
+import connector.request.Request;
+import connector.request.RequestFacade;
+import connector.response.Response;
+import connector.response.ResponseFacade;
 import util.os.ServletLoader;
 
 public class ServletProcessor {

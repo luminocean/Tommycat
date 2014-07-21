@@ -1,4 +1,4 @@
-package core;
+package launch;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -6,9 +6,9 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import connector.Request;
-import connector.Response;
-
+import connector.request.Request;
+import connector.response.Response;
+import core.ServletProcessor;
 import util.Logger;
 
 public class ServerLauncher {

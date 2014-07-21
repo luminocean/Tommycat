@@ -1,8 +1,9 @@
-package connector;
+package connector.response;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
+import connector.request.Request;
 import util.Constants;
 import util.Logger;
 import util.os.FileHelper;

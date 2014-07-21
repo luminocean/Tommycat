@@ -8,7 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import connector.ResponseStream;
+import connector.response.ResponseStream;
 import util.Constants;
 
 public class FileHelper {
