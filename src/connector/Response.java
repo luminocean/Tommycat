@@ -37,13 +37,9 @@ public class Response {
 		
 		String fileContent = "";
 		try{
-			fileContent = FileHelper.getWebAppFileContent(uri);
-			Logger.debug("读取请求的文件内容："+ fileContent);
-			
-			responseStream.write(fileContent);
+			FileHelper.writeFileToStream(uri, responseStream);
 			
 			finishResponse();
-			//writeResponse(os, fileContent);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
