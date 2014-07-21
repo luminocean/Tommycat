@@ -21,4 +21,8 @@ public class RequestHeader {
 			headerMap.put(key, value);
 		}
 	}
+	
+	public String getHeaderParam(String key){
+		return headerMap.get(key);
+	}
 }

@@ -114,6 +114,20 @@ public class Request{
 		return content;
 	}
 	
+	public String getHeaderParam(String key){
+		String value = requestHeader.getHeaderParam(key);
+		
+		return value;
+	}
+	
+	public Map<String, String> getParamMap() {
+		return requestLine.getParamMap();
+	}
+
+	public Map<String, Object> getAttributeMap() {
+		return requestLine.getAttributeMap();
+	}
+	
 	
 	public String toString(){
 		return content;

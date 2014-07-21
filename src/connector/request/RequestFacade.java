@@ -26,8 +26,9 @@ public class RequestFacade implements HttpServletRequest{
 
 	@Override
 	public Object getAttribute(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, Object> map = request.getAttributeMap();
+		
+		return map.get(name);
 	}
 
 	@Override
@@ -51,13 +52,19 @@ public class RequestFacade implements HttpServletRequest{
 
 	@Override
 	public int getContentLength() {
-		// TODO Auto-generated method stub
-		return 0;
+		String str = request.getHeaderParam("Content-Length");
+		
+		try{
+			int length = Integer.parseInt(str);
+			return length;
+		}catch(Exception e){
+			e.printStackTrace();
+			return 0;
+		}
 	}
 
 	@Override
 	public String getContentType() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -69,8 +76,8 @@ public class RequestFacade implements HttpServletRequest{
 
 	@Override
 	public String getParameter(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, String> map = request.getParamMap();
+		return map.get(name);
 	}
 
 	@Override
@@ -87,8 +94,8 @@ public class RequestFacade implements HttpServletRequest{
 
 	@Override
 	public Map getParameterMap() {
-		// TODO Auto-generated method stub
-		return null;
+		//注意这里返回的是字符串的形式（比如参数里面的数字都是String）
+		return request.getParamMap();
 	}
 
 	@Override
@@ -135,8 +142,9 @@ public class RequestFacade implements HttpServletRequest{
 
 	@Override
 	public void setAttribute(String name, Object o) {
-		// TODO Auto-generated method stub
+		Map<String, Object> map = request.getAttributeMap();
 		
+		map.put(name, o);
 	}
 
 	@Override

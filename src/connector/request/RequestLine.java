@@ -11,8 +11,8 @@ public class RequestLine {
 	private String methodString;
 	private String uri; // 此uri就是http请求里面带的uri，没有变化！
 	private String protocal;
-	private Map<String, String> paramStrMap = new HashMap<String, String>(); //请求参数中的参数
 	
+	private Map<String, String> paramMap = new HashMap<String, String>(); //请求参数中的参数
 	private Map<String, Object> attributeMap  = new HashMap<String, Object>();
 
 	public RequestLine(String requestLineStr) throws Exception {
@@ -28,7 +28,7 @@ public class RequestLine {
 		parseRequestPath(requestPath);
 		
 		//把参数映射复制到属性映射里面去
-		copyMap(paramStrMap, attributeMap);
+		copyMap(paramMap, attributeMap);
 	}
 
 
@@ -61,7 +61,7 @@ public class RequestLine {
 		uri = parts[0];
 		
 		String paramsStr = parts[1];
-		paramStrMap = getParamMap(paramsStr);
+		paramMap = getParamMap(paramsStr);
 	}
 
 	/**
@@ -99,4 +99,13 @@ public class RequestLine {
 	public String getProtocal() {
 		return protocal;
 	}
+
+	public Map<String, String> getParamMap() {
+		return paramMap;
+	}
+
+	public Map<String, Object> getAttributeMap() {
+		return attributeMap;
+	}
+	
 }
