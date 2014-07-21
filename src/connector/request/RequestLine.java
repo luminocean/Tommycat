@@ -5,13 +5,15 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.smartcardio.ATR;
+
 public class RequestLine {
 	private String methodString;
 	private String uri; // 此uri就是http请求里面带的uri，没有变化！
 	private String protocal;
-	private Map<String, String> paramStrMap; //请求参数中的参数
+	private Map<String, String> paramStrMap = new HashMap<String, String>(); //请求参数中的参数
 	
-	private Map<String, Object> attributeMap;
+	private Map<String, Object> attributeMap  = new HashMap<String, Object>();
 
 	public RequestLine(String requestLineStr) throws Exception {
 		String[] parts = requestLineStr.split(" ");

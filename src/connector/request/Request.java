@@ -21,19 +21,47 @@ import util.Logger;
 
 public class Request{
 	private static final int BUFFER_SIZE = 2048;
-	//请求里面的全部内容，包括首行以及请求头部
+	//请求里面的全部内容的字符串，包括首行以、请求头部以及报文体
 	private String content;
 	
 	//请求首行对象
 	private RequestLine requestLine;
+	//请求头部对象
+	private RequestHeader requestHeader;
 	
 	public Request(InputStream is) throws Exception{
+		//从输入流中读取请求报文的全部内容
 		content = loadRequest(is);
-		
+		//解析出首行
 		String requestLineStr = getRequestLine(content);
 		requestLine = new RequestLine(requestLineStr);
+		//解析请求头部
+		String headerStr = getRequestHeader(content);
+		requestHeader = new RequestHeader(headerStr);
 	}
 	
+	
+	/**
+	 * 从请求报文字符串中获取头部
+	 * @param content
+	 * @return
+	 */
+	private String getRequestHeader(String content) {
+		int startPos = content.indexOf("\n")+1;
+		
+		int endPos = content.indexOf("\n\n");
+		//如果没有连续两个换行，即没有空白行，那么就直接去掉首行返回
+		if( endPos == -1 ){
+			String headerString = content.substring(startPos);
+			System.out.println("Header is:" + headerString);
+			return headerString.trim();
+		}
+		
+		String headerString = content.substring(startPos, endPos);
+		
+		return headerString.trim();
+	}
+
 	/**
 	 * 从请求报文中获取请求首行
 	 * @param content
@@ -85,6 +113,7 @@ public class Request{
 		
 		return content;
 	}
+	
 	
 	public String toString(){
 		return content;
