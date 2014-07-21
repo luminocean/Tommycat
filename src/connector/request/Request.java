@@ -53,7 +53,6 @@ public class Request{
 		//如果没有连续两个换行，即没有空白行，那么就直接去掉首行返回
 		if( endPos == -1 ){
 			String headerString = content.substring(startPos);
-			System.out.println("Header is:" + headerString);
 			return headerString.trim();
 		}
 		

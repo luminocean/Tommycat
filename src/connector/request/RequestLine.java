@@ -53,6 +53,7 @@ public class RequestLine {
 		int dividorPos = requestPath.indexOf("?");
 		// 如果没有分隔符，表示没有参数
 		if (dividorPos == -1) {
+			uri = requestPath;
 			return;
 		}
 
