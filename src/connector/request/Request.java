@@ -68,7 +68,7 @@ public class Request{
 			try{
 				readedBytes = is.read(buffer);
 			}catch(SocketTimeoutException e){
-				//如果运气不好数据正好是BUFFER_SIZE的正数倍，那么只能等到超时了
+				//如果运气不好数据正好是BUFFER_SIZE的整数倍，那么只能等到超时了
 				Logger.debug("socket读取数据超时，结束读取");
 				break;
 			}catch (Exception e) {
