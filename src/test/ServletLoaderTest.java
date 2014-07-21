@@ -6,7 +6,7 @@ import java.io.IOException;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
-import os.ServletLoader;
+import util.os.ServletLoader;
 
 public class ServletLoaderTest {
 

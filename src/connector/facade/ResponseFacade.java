@@ -1,4 +1,4 @@
-package facade;
+package connector.facade;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -7,7 +7,9 @@ import java.util.Locale;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletResponse;
 
-import core.Response;
+import connector.Response;
+
+
 
 public class ResponseFacade implements ServletResponse{
 	private Response response;

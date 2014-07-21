@@ -1,4 +1,4 @@
-package facade;
+package connector.facade;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,7 +11,9 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletRequest;
 
-import core.Request;
+import connector.Request;
+
+
 
 public class RequestFacade implements ServletRequest{
 	private Request request;

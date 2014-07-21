@@ -1,4 +1,4 @@
-package core;
+package connector;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
 import java.util.Arrays;

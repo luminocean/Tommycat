@@ -4,9 +4,11 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import facade.RequestFacade;
-import facade.ResponseFacade;
-import os.ServletLoader;
+import connector.Request;
+import connector.Response;
+import connector.facade.RequestFacade;
+import connector.facade.ResponseFacade;
+import util.os.ServletLoader;
 
 public class ServletProcessor {
 	private ServletLoader servletLoader = new ServletLoader();

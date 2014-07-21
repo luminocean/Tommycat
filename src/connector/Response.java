@@ -1,15 +1,21 @@
-package core;
+package connector;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
-import os.FileHelper;
 import util.Constants;
 import util.Logger;
+import util.os.FileHelper;
 
 
 public class Response {
+	//直接从socket那里拿到的输出流
 	private OutputStream os;
+	
 	private Request request;
+	
+	//将会交给servlet使用的输出流，它包装了OutputStream os
+	private ResponseStream responseStream;
+	
 	
 	public Response(OutputStream os, Request request) {
 		this.os = os;
