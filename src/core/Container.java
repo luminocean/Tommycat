@@ -4,17 +4,35 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import util.os.ServletLoader;
 import connector.request.Request;
 import connector.request.RequestFacade;
 import connector.response.Response;
 import connector.response.ResponseFacade;
-import util.os.ServletLoader;
 
-public class ServletProcessor {
+public class Container {
 	private ServletLoader servletLoader = new ServletLoader();
 
+	public void invoke(Request request, Response response){
+		//下面进行请求的分发
+		String uri = request.getUri();
+		//判断该请求该何去何从
+		if( uri.startsWith("/servlet/") ){
+			//进入servlet处理路线
+			servletProcess(request, response);
+		}else{
+			//进入静态资源处理路线
+			//向客户端发送响应
+			response.sendStaticResource();
+		}
+	}
 	
-	public void process(Request request, Response response) {
+	/**
+	 * 加载servlet并调用
+	 * @param request
+	 * @param response
+	 */
+	private void servletProcess(Request request, Response response){
 		String uri = request.getUri();
 		String servletName = getServletName(uri);
 		
@@ -34,7 +52,7 @@ public class ServletProcessor {
 			e.printStackTrace();
 		}
 	}
-
+	
 	/**
 	 * 从请求uri中获取servlet名称
 	 * @param uri

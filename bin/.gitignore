@@ -5,3 +5,12 @@
 /launch
 /response
 /test
+/snippet
+/Container.class
+/Cluster.class
+/ContainerListener.class
+/Loader.class
+/Manager.class
+/Mapper.class
+/Realm.class
+/Request.class

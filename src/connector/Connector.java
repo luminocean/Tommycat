@@ -5,14 +5,17 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+
 import util.Logger;
 import connector.request.Request;
 import connector.response.Response;
-import core.ServletProcessor;
+import core.Container;
 
 public class Connector {
 	private static final int MAX_READ_TIMES = 3;
 	private boolean isShutdown = false;
+	
+	private Container container;
 	
 	/**
 	 * 连接器启动，接受用户的连接请求
@@ -38,8 +41,8 @@ public class Connector {
 			Request request = new Request(is);
 			Response response = new Response(os, request);
 			
-			//开始分发请求
-			dispatch(request, response);
+			//从现在开始交给container来处理后续的事情！
+			container.invoke(request, response);
 			
 			//连接结束
 			socket.close();
@@ -48,23 +51,7 @@ public class Connector {
 		serverSocket.close();
 	}
 
-	/**
-	 * 分发请求，为请求找到合适的处理器，处理并发回响应
-	 * @param request
-	 * @param response
-	 */
-	private void dispatch(Request request, Response response) {
-		String uri = request.getUri();
-		
-		//判断该请求该何去何从
-		if( uri.startsWith("/servlet/") ){
-			//进入servlet处理路线，将request和response传入处理器
-			ServletProcessor processor = new ServletProcessor();
-			processor.process(request, response);
-		}else{
-			//进入静态资源处理路线
-			//向客户端发送响应
-			response.sendStaticResource();
-		}
+	public void setContainer(Container container) {
+		this.container = container;
 	}
 }
