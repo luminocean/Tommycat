@@ -26,7 +26,7 @@ public class MainServlet implements Servlet{
 	@Override
 	public void service(ServletRequest req, ServletResponse res)
 			throws ServletException, IOException {
-		System.out.println("-- 用户Servlet运行 --");
+		System.out.println("-- 鐢ㄦ埛Servlet杩愯 --");
 		PrintWriter w = res.getWriter();
 		w.println("Welcome to the user servlet domain~~");
 	}
