@@ -23,7 +23,7 @@ public class ServerLauncher {
 		connector.setContainer(container);
 		
 		try {
-			//启动connector
+			//异步启动connector
 			connector.start();
 			
 			//主线程暂停

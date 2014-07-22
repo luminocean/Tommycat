@@ -33,19 +33,11 @@ public class Request{
 	public Request(InputStream is) throws Exception{
 		//读取首行
 		String requestLineStr = readRequestLine(is);
-		Logger.debug("**"+requestLineStr);
-		
 		requestLine = new RequestLine(requestLineStr);
 		
 		//读取报文头
 		String headerStr = readHeader(is);
-		Logger.debug("**"+headerStr);
-		
 		requestHeader = new RequestHeader(headerStr);
-
-		/**
-		 * 请先把这个请求做完了再测试！否则浏览器连续发送请求的时候它会认为前一个连接失败了于是新开了一个！
-		 */
 	}
 	
 	

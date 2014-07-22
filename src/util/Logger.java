@@ -5,6 +5,16 @@ public class Logger {
 		String callingInfo = getCallingInfo();
 		System.out.println("[debug] "+msg+" "+callingInfo);
 	}
+	
+	public static void info(String msg){
+		String callingInfo = getCallingInfo();
+		System.out.println("[info] "+msg+" "+callingInfo);
+	}
+	
+	public static void error(String msg){
+		String callingInfo = getCallingInfo();
+		System.out.println("[*ERROR*] "+msg+" "+callingInfo);
+	}
 
 	/**
 	 * 获取该方法的调用方信息
