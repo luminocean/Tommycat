@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 import util.Logger;
 import connector.request.Request;
@@ -35,27 +36,30 @@ public class HttpProcessor implements Runnable, LifeCycle{
 	@Override
 	public void run() {
 		try{
-			
 			while( !isStop ){
 				//先等待socket的到达
 				waitForSocket();
 				
 				//获得了socket开始处理
 				process(socket);
-				
-				//模拟一个比较耗时的操作，测试并发性
-				//Thread.sleep(10000);
-				
+			}
+		}catch(SocketTimeoutException e){
+			//读取socket超时，意味着可以结束长连接了
+			Logger.debug("长连接结束");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			//进行善后工作
+			try {
 				//完成了socket的交互，结束连接
 				socket.close();
 				socket = null;
-				
 				//调用connector来回收自己
 				connector.recycle(this);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 			
-		}catch(Exception e){
-			e.printStackTrace();
 		}
 	}
 	
@@ -98,11 +102,16 @@ public class HttpProcessor implements Runnable, LifeCycle{
 		OutputStream os = socket.getOutputStream();
 		
 		//根据两个流创建request和response
-		Request request = new Request(is);
-		Response response = new Response(os, request);
-		
-		//从现在开始交给container来处理后续的事情！
-		connector.getContainer().invoke(request, response);
+		Request request = null;
+		Response response = null;
+		do{
+			request = new Request(is);
+			response = new Response(os, request);
+			
+			//从现在开始交给container来处理后续的事情！
+			connector.getContainer().invoke(request, response);
+		}while( request.isKeepAlive() );
+		//如果是长连接的请求，那么可以继续循环读取请求
 	}
 
 

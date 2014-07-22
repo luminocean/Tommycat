@@ -1,5 +1,6 @@
 package connector.request;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -30,93 +31,91 @@ public class Request{
 	private RequestHeader requestHeader;
 	
 	public Request(InputStream is) throws Exception{
-		//从输入流中读取请求报文的全部内容
-		content = loadRequest(is);
-		//解析出首行
-		String requestLineStr = getRequestLine(content);
+		//读取首行
+		String requestLineStr = readRequestLine(is);
+		Logger.debug("**"+requestLineStr);
+		
 		requestLine = new RequestLine(requestLineStr);
-		//解析请求头部
-		String headerStr = getRequestHeader(content);
+		
+		//读取报文头
+		String headerStr = readHeader(is);
+		Logger.debug("**"+headerStr);
+		
 		requestHeader = new RequestHeader(headerStr);
+
+		/**
+		 * 请先把这个请求做完了再测试！否则浏览器连续发送请求的时候它会认为前一个连接失败了于是新开了一个！
+		 */
 	}
 	
 	
-	/**
-	 * 从请求报文字符串中获取头部
-	 * @param content
-	 * @return
-	 */
-	private String getRequestHeader(String content) {
-		int startPos = content.indexOf("\n")+1;
+	private String readRequestLine(InputStream is) throws SocketTimeoutException, IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		
-		int endPos = content.indexOf("\n\n");
-		//如果没有连续两个换行，即没有空白行，那么就直接去掉首行返回
-		if( endPos == -1 ){
-			String headerString = content.substring(startPos);
-			return headerString.trim();
-		}
-		
-		String headerString = content.substring(startPos, endPos);
-		
-		return headerString.trim();
-	}
-
-	/**
-	 * 从请求报文中获取请求首行
-	 * @param content
-	 * @return
-	 * @throws Exception 
-	 */
-	private String getRequestLine(String content) throws Exception {
-		int firstCRLFPos = content.indexOf("\n");
-
-		if( firstCRLFPos >= 0 ){
-			String requestLine = content.substring(0, firstCRLFPos);
-			return requestLine;
-		}else{
-			throw new Exception("请求中首行解析异常！");
-		}
-	}
-
-	/**
-	 * 从输入流中加载整个请求的内容
-	 * @param is
-	 * @return
-	 */
-	private String loadRequest(InputStream is) {
-		StringBuilder builder = new StringBuilder();
-		
-		//这里表明目前一个http请求最大的大小为2048个字节
-		//同时之所以使用字节的方式而不是一个个char读进来是考虑到对中文的支持，按照字节读中文就铁定会出问题的
-		byte[] buffer = new byte[BUFFER_SIZE];
-		
-		int readedBytes = 0;
+		//先把前端所有的空字符给清理掉
+		int c = 0;
 		do{
-			try{
-				readedBytes = is.read(buffer);
-			}catch(SocketTimeoutException e){
-				//如果运气不好数据正好是BUFFER_SIZE的整数倍，那么只能等到超时了
-				Logger.debug("socket读取数据超时，结束读取");
-				break;
-			}catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-			byte[] bytes = Arrays.copyOfRange(buffer, 0, readedBytes);
-			String contentPart = new String(bytes);
-			
-			builder.append(contentPart);
-		}while( readedBytes == BUFFER_SIZE ); //如果上一次读取时读满的，那么极有可能下面还有一次
+			c = is.read();
+		}while( c==' ' || c==10 || c==13 );
 		
-		String content = builder.toString();
+		//读取socket流直到读到换行符为止
+		//13号是CR 10号是LF，这俩都要排除(在java中这两个都被认为是换行符，其中\n是10)
+		while( c != -1 && c != 13){
+			char peek = (char)c;
+			baos.write(c);
+			c = is.read();
+		}
 		
-		return content;
+		if( c == 13 ){
+			//把剩下那个LF也去掉
+			c = is.read();
+			assert c==10:"请求里面CF后面没有跟LF！";
+		}
+		
+		byte[] bytes = baos.toByteArray();
+		String requestLine = new String(bytes);
+		
+		return requestLine;
 	}
+	
+	private String readHeader(InputStream is) throws SocketTimeoutException, IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		
+		//预警标志，连续两个CRLF表示头部结束
+		//因此如果在CRLF中读到了LF之后又读到了CR,就意味着读取结束，可以返回了
+		boolean flag = false;
+		
+		int c = is.read();
+		while( c != -1 ){
+			//读到LF，预警
+			if( c == 10 ) flag = true;
+			else if( c == 13 ){
+				//又读到了CR，读取结束
+				if(flag) break;
+				//只是换行，预警解除
+				else flag = false;
+			}else{
+				flag = false;
+			}
+			baos.write(c);
+			c = is.read();
+		}
+		
+		byte[] bytes = baos.toByteArray();
+		String headerStr = new String(bytes);
+		
+		return headerStr;
+	}
+
 	
 	public String getHeaderParam(String key){
 		String value = requestHeader.getHeaderParam(key);
 		
 		return value;
+	}
+	
+	public boolean isKeepAlive() {
+		return requestHeader.isKeepAlive();
 	}
 	
 	public Map<String, String> getParamMap() {

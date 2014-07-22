@@ -76,6 +76,7 @@ public class Response {
 		writer.println("HTTP/1.1 200 OK");
 		writer.println("Content-Type: text/html;charset=utf-8");
 		writer.println("Content-Length: "+length);
+		writer.println("Connection: keep-alive");
 		
 		writer.flush();
 	}

@@ -22,7 +22,14 @@ public class RequestHeader {
 		}
 	}
 	
+	public boolean isKeepAlive() {
+		String s = headerMap.get("Connection");
+		
+		return s.equals("keep-alive");
+	}
+	
 	public String getHeaderParam(String key){
 		return headerMap.get(key);
 	}
+
 }

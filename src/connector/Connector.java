@@ -41,7 +41,7 @@ public class Connector implements Runnable, LifeCycle{
 				//Logger.debug("等待新的socket连接");
 				//进入等待状态
 				Socket socket = serverSocket.accept();
-				socket.setSoTimeout(1000);	//设置read操作的阻塞时间
+				socket.setSoTimeout(12000);	//设置read操作的阻塞时间
 				
 				//已经获取了socket，现在把它交给processor来处理
 				HttpProcessor processor = getProcessor();
