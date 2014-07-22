@@ -26,9 +26,10 @@ public class ServerLauncher {
 			//启动connector
 			connector.start();
 			
-			System.out.println("输入任何字符停止服务器:");
-			//使用标准输入阻塞应用，输入任何字符即可终止整个进程
-			new Scanner(System.in).next();
+			//主线程暂停
+			while(true)
+				Thread.sleep(1000);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

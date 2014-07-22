@@ -47,6 +47,7 @@ public class Container {
 		try {
 			servlet.service( servletRequest, servletResponse );
 			
+			//这一步非常重要！
 			response.finishResponse();
 		} catch (Exception e) {
 			e.printStackTrace();

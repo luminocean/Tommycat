@@ -1,4 +1,4 @@
-package core;
+package connector;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,9 +6,9 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 import util.Logger;
-import connector.Connector;
 import connector.request.Request;
 import connector.response.Response;
+import core.LifeCycle;
 
 /**
  * 接受已经获取的socket连接，创建Request以及Response对象传递给Container
@@ -43,6 +43,9 @@ public class HttpProcessor implements Runnable, LifeCycle{
 				//获得了socket开始处理
 				process(socket);
 				
+				//模拟一个比较耗时的操作，测试并发性
+				//Thread.sleep(10000);
+				
 				//完成了socket的交互，结束连接
 				socket.close();
 				socket = null;
@@ -56,10 +59,14 @@ public class HttpProcessor implements Runnable, LifeCycle{
 		}
 	}
 	
+	
 	private synchronized void waitForSocket() {
 		//如果当前没有socket则先阻塞自己
 		while( socket == null ){
 			try {
+				//这里涉及到了线程同步，要调用wait()就必须先获取该对象的的monitor
+				//因为不允许大家并发调用这个方法
+				//所以本方法使用synchronized让每一个进入本方法的线程都是唯一的，也持有了该对象的监视器
 				wait();
 			} catch (InterruptedException e) {
 				e.printStackTrace();

@@ -7,7 +7,6 @@ import java.util.Stack;
 
 import util.Logger;
 import core.Container;
-import core.HttpProcessor;
 import core.LifeCycle;
 
 /**
@@ -39,6 +38,7 @@ public class Connector implements Runnable, LifeCycle{
 			ServerSocket serverSocket = new ServerSocket(8080, 1, InetAddress.getByName("127.0.0.1"));
 			
 			while(!isShutdown){
+				//Logger.debug("等待新的socket连接");
 				//进入等待状态
 				Socket socket = serverSocket.accept();
 				socket.setSoTimeout(1000);	//设置read操作的阻塞时间
@@ -51,6 +51,7 @@ public class Connector implements Runnable, LifeCycle{
 					continue;
 				}
 				
+				//Logger.debug("向processor分发socket");
 				processor.assignSocket(socket);
 			}
 			
@@ -67,6 +68,7 @@ public class Connector implements Runnable, LifeCycle{
 	private HttpProcessor getProcessor() {
 		//如果池里还有处理器，那么直接返回
 		if( processorPool.size() > 0 ){
+			//Logger.debug("从池中取出一个processor！剩余"+(processorPool.size()-1)+"个");
 			return processorPool.pop();
 		}else{
 			Logger.debug("处理器池已耗尽，无法获取processor");
