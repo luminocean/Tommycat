@@ -1,4 +1,4 @@
-package container;
+package container.wrapper;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -12,9 +12,10 @@ import util.Logger;
 import util.os.ServletLoader;
 import connector.request.Request;
 import connector.response.Response;
-import container.valve.BasicWrapperValve;
+import container.Container;
+import container.Pipeline;
 
-public class DefaultWrapper implements Container {
+public class DefaultWrapper implements Wrapper {
 	//该wrapper的名字，上层的context会用这个名字来查找wrapper，以此来分配请求
 	private String name;
 	private Pipeline pipeline = new Pipeline();

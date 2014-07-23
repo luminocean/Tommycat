@@ -1,22 +1,31 @@
-package container;
+package container.context;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.ServletException;
 
 import util.Logger;
 import util.os.FileHelper;
 import connector.request.Request;
 import connector.response.Response;
+import container.Container;
+import container.Valve;
+import container.ValveContext;
 
-public class DefaultContext implements Container {
-	//保管了请求路径和对应servlet容器之间的映射
-	private Map<String, String> servletMap = new HashMap<String, String>();
-	//子容器的映射集合
-	private Map<String, Container> childrenMap = new HashMap<String, Container>();
+public class BasicContextValve implements Valve{
+	private Map<String, String> servletNameMap;
+	private Map<String, Container> childrenMap;
 	
-	
+	public BasicContextValve(Context context) {
+		this.servletNameMap = context.getServletNameMap();
+		this.childrenMap = context.getChildrenMap();
+	}
+
 	@Override
-	public void invoke(Request request, Response response) {
+	public void invoke(Request request, Response response,
+			ValveContext valveContext) throws ServletException, IOException {
 		String requestUri = request.getUri();
 		
 		//先判断是否是静态资源
@@ -25,7 +34,7 @@ public class DefaultContext implements Container {
 			return;
 		}
 		
-		String mappedServletName = servletMap.get(requestUri);
+		String mappedServletName = servletNameMap.get(requestUri);
 		if( mappedServletName != null ){
 			Container wrapper = childrenMap.get(mappedServletName);
 			if( wrapper == null )
@@ -37,20 +46,6 @@ public class DefaultContext implements Container {
 			Logger.debug("找不到请求uri到servlet的映射，或是任何静态资源");
 			Logger.debug("请求uri："+requestUri);
 		}
+		
 	}
-
-	@Override
-	public void addChild(Container child) {
-		childrenMap.put(child.getName(), child);
-	}
-	
-	public void addServletMapping(String uri, String servletName){
-		servletMap.put(uri, servletName);
-	}
-
-	@Override
-	public String getName() {
-		return null;
-	}
-
 }

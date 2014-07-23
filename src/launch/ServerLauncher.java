@@ -11,8 +11,8 @@ import connector.Connector;
 import connector.request.Request;
 import connector.response.Response;
 import container.Container;
-import container.DefaultContext;
-import container.DefaultWrapper;
+import container.context.DefaultContext;
+import container.wrapper.DefaultWrapper;
 import util.Logger;
 
 public class ServerLauncher {

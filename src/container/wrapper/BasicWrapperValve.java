@@ -1,4 +1,4 @@
-package container.valve;
+package container.wrapper;
 
 import java.io.IOException;
 
@@ -11,6 +11,8 @@ import connector.request.Request;
 import connector.request.RequestFacade;
 import connector.response.Response;
 import connector.response.ResponseFacade;
+import container.Valve;
+import container.ValveContext;
 
 /**
  * Wrapper的基础valve，职责就是最终调用servlet完成服务，在所有其他的valve之后调用
@@ -37,5 +39,8 @@ public class BasicWrapperValve implements Valve{
 		ServletResponse sres = new ResponseFacade(response);
 		
 		servlet.service(sreq, sres);
+		
+		//说实话在BasicValve里面写这一句话没什么意义，毕竟是最后一个valve了
+		valveContext.invokeNext(request, response);
 	}
 }
