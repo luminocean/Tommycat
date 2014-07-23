@@ -11,6 +11,11 @@ public class Logger {
 		System.out.println("[info] "+msg+" "+callingInfo);
 	}
 	
+	public static void warning(String msg){
+		String callingInfo = getCallingInfo();
+		System.out.println("[warning] "+msg+" "+callingInfo);
+	}
+	
 	public static void error(String msg){
 		String callingInfo = getCallingInfo();
 		System.out.println("[*ERROR*] "+msg+" "+callingInfo);

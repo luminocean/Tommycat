@@ -1,18 +1,22 @@
 package container;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
+import sun.rmi.runtime.Log;
+import util.Logger;
 import util.os.ServletLoader;
 import connector.request.Request;
-import connector.request.RequestFacade;
 import connector.response.Response;
-import connector.response.ResponseFacade;
 import container.valve.BasicWrapperValve;
 
 public class DefaultWrapper implements Container {
+	//该wrapper的名字，上层的context会用这个名字来查找wrapper，以此来分配请求
+	private String name;
 	private Pipeline pipeline = new Pipeline();
 	
 	/**
@@ -25,6 +29,9 @@ public class DefaultWrapper implements Container {
 		//配置BasicValve！否则Servlet就不会被处理了！！千万注意别忘记了！
 		BasicWrapperValve basicValve = new BasicWrapperValve(servlet);
 		pipeline.setBasicValve(basicValve);
+		
+		//wrapper名字与它关联的servlet相同，这一点请注意
+		name = servletName;
 	}
 
 	/**
@@ -33,8 +40,7 @@ public class DefaultWrapper implements Container {
 	 * @return
 	 */
 	private Servlet loadServlet(String servletName) {
-		ServletLoader loader = new ServletLoader();
-		Servlet targetServlet = loader.loadServlet(servletName);
+		Servlet targetServlet = ServletLoader.loadServlet(servletName);
 		
 		return targetServlet;
 	}
@@ -52,5 +58,15 @@ public class DefaultWrapper implements Container {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void addChild(Container child) {
+		Logger.warning("Wrapper中不可以添加子容器！");
+	}
+
+	@Override
+	public String getName() {
+		return name;
 	}
 }

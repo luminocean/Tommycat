@@ -117,6 +117,7 @@ public class HttpProcessor implements Runnable, LifeCycle{
 			//所以由connector(processor)来完成
 			response.finishResponse();
 			
+			Logger.debug("已发出一个响应！");
 		}while( request.isKeepAlive() );
 		//如果是长连接的请求，那么可以继续循环读取请求
 	}

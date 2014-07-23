@@ -13,7 +13,7 @@ import util.Logger;
 
 public class ServletLoader {
 
-	public Servlet loadServlet(String servletName) {
+	public static Servlet loadServlet(String servletName) {
 		try{
 			URL servletPath = new URL("file", null, Constants.WEB_ROOT+ Constants.APP_CLASS_PATH);
 			

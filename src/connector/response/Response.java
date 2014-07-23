@@ -39,8 +39,6 @@ public class Response {
 		String fileContent = "";
 		try{
 			FileHelper.writeFileToStream(uri, responseStream);
-			
-			finishResponse();
 		}catch(Exception e){
 			e.printStackTrace();
 		}

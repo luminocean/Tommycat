@@ -52,6 +52,22 @@ public class FileHelper {
 		return Constants.WEB_ROOT+ location;
 	}
 
+	
+	/**
+	 * 判断当前web项目中是否有指定的资源
+	 * @param uri
+	 */
+	public static boolean hasResource(String uri) {
+		String fileLocation = getLocationInWebApp(uri);
+		
+		File file = new File(fileLocation);
+		
+		if( file.exists() )
+			return true;
+		return false;
+	}
+	
+	
 	public static void writeFileToStream(String uri, OutputStream stream) {
 		String fileLocation = getLocationInWebApp(uri);
 		
