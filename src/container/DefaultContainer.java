@@ -1,4 +1,4 @@
-package core;
+package container;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletRequest;
@@ -10,9 +10,10 @@ import connector.request.RequestFacade;
 import connector.response.Response;
 import connector.response.ResponseFacade;
 
-public class Container {
+public class DefaultContainer implements Container{
 	private ServletLoader servletLoader = new ServletLoader();
 
+	@Override
 	public void invoke(Request request, Response response){
 		//下面进行请求的分发
 		String uri = request.getUri();
