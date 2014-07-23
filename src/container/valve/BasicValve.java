@@ -32,9 +32,13 @@ public class BasicValve implements Valve{
 	@Override
 	public void invoke(Request request, Response response,
 			ValveContext valveContext) throws ServletException, IOException {
+		//在传递给Servlet之前将其包装
 		ServletRequest sreq = new RequestFacade(request);
 		ServletResponse sres = new ResponseFacade(response);
 		
 		servlet.service(sreq, sres);
+		
+		//这一步非常重要！
+		response.finishResponse();
 	}
 }
