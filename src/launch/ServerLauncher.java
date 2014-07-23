@@ -21,13 +21,17 @@ public class ServerLauncher {
 		//Container container = new DefaultContainer();
 		
 		//每个wrapper都会关联唯一的一个servlet，在创建后设置该servlet的名字以便加载该类
-		DefaultWrapper wrapper = new DefaultWrapper();
-		wrapper.setup("servlet.MainServlet");
+		DefaultWrapper wrapper1 = new DefaultWrapper();
+		wrapper1.setup("servlet.MainServlet");
+		DefaultWrapper wrapper2 = new DefaultWrapper();
+		wrapper2.setup("servlet.ToyServlet");
 		
 		//将wrapper放到context里面
 		DefaultContext context = new DefaultContext();
-		context.addChild(wrapper);
+		context.addChild(wrapper1);
+		context.addChild(wrapper2);
 		context.addServletMapping("/main", "servlet.MainServlet");
+		context.addServletMapping("/toy", "servlet.ToyServlet");
 		
 		//connector将会针对每一个请求开启一个线程调用该container实例
 		connector.setContainer(context);

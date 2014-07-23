@@ -39,9 +39,9 @@ public class BasicContextValve implements Valve{
 			Container wrapper = childrenMap.get(mappedServletName);
 			if( wrapper == null )
 				Logger.error("配置了uri到servlet的映射，但是找不到这个servlet所在的wrapper!");
-			
-			//调用查找到的wrapper，继续往下传
-			wrapper.invoke(request, response);
+			else
+				//调用查找到的wrapper，继续往下传
+				wrapper.invoke(request, response);
 		}else{
 			Logger.debug("找不到请求uri到servlet的映射，或是任何静态资源");
 			Logger.debug("请求uri："+requestUri);
