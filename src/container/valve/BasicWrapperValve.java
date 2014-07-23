@@ -13,14 +13,14 @@ import connector.response.Response;
 import connector.response.ResponseFacade;
 
 /**
- * 基础valve，职责就是最终调用servlet完成服务，在所有其他的valve之后调用
+ * Wrapper的基础valve，职责就是最终调用servlet完成服务，在所有其他的valve之后调用
  * @author zhangh-fnst
  *
  */
-public class BasicValve implements Valve{
+public class BasicWrapperValve implements Valve{
 	private Servlet servlet;
 
-	public BasicValve(Servlet servlet) {
+	public BasicWrapperValve(Servlet servlet) {
 		this.servlet = servlet;
 	}
 
@@ -37,8 +37,5 @@ public class BasicValve implements Valve{
 		ServletResponse sres = new ResponseFacade(response);
 		
 		servlet.service(sreq, sres);
-		
-		//这一步非常重要！
-		response.finishResponse();
 	}
 }

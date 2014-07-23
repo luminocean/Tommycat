@@ -10,9 +10,9 @@ import connector.request.Request;
 import connector.request.RequestFacade;
 import connector.response.Response;
 import connector.response.ResponseFacade;
-import container.valve.BasicValve;
+import container.valve.BasicWrapperValve;
 
-public class DefaultWrapper implements Wrapper {
+public class DefaultWrapper implements Container {
 	private Pipeline pipeline = new Pipeline();
 	
 	/**
@@ -23,7 +23,7 @@ public class DefaultWrapper implements Wrapper {
 		Servlet servlet = loadServlet(servletName);
 		
 		//配置BasicValve！否则Servlet就不会被处理了！！千万注意别忘记了！
-		BasicValve basicValve = new BasicValve(servlet);
+		BasicWrapperValve basicValve = new BasicWrapperValve(servlet);
 		pipeline.setBasicValve(basicValve);
 	}
 

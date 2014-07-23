@@ -110,10 +110,16 @@ public class HttpProcessor implements Runnable, LifeCycle{
 			
 			//从现在开始交给container来处理后续的事情！
 			connector.getContainer().invoke(request, response);
+			
+			//非常重要的一步！将response的内容输出到socket的输出流中！
+			//如果缺了这一步那本客户端那边是收不到消息的
+			//依据职责分配的原则，这部分内容并不是container所要完成的工作
+			//所以由connector(processor)来完成
+			response.finishResponse();
+			
 		}while( request.isKeepAlive() );
 		//如果是长连接的请求，那么可以继续循环读取请求
 	}
-
 
 	@Override
 	public void start() {

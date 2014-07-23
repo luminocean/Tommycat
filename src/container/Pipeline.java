@@ -9,15 +9,15 @@ import javax.servlet.ServletException;
 import util.Logger;
 import connector.request.Request;
 import connector.response.Response;
-import container.valve.BasicValve;
+import container.valve.BasicWrapperValve;
 import container.valve.Valve;
 import container.valve.ValveContext;
 
 public class Pipeline {
-	private BasicValve basicValve;
+	private BasicWrapperValve basicValve;
 	private List<Valve> valves = new ArrayList<Valve>();
 
-	public void setBasicValve(BasicValve basicValve) {
+	public void setBasicValve(BasicWrapperValve basicValve) {
 		this.basicValve = basicValve;
 		valves.add(basicValve);
 	}
