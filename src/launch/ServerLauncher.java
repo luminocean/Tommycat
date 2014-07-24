@@ -11,23 +11,22 @@ import connector.Connector;
 import connector.request.Request;
 import connector.response.Response;
 import container.Container;
-import container.context.DefaultContext;
-import container.wrapper.DefaultWrapper;
+import container.context.StandardContext;
+import container.wrapper.StandardWrapper;
 import util.Logger;
 
 public class ServerLauncher {
 	public static void main(String[] args) {
 		Connector connector = new Connector();
-		//Container container = new DefaultContainer();
-		
+
 		//每个wrapper都会关联唯一的一个servlet，在创建后设置该servlet的名字以便加载该类
-		DefaultWrapper wrapper1 = new DefaultWrapper();
+		StandardWrapper wrapper1 = new StandardWrapper();
 		wrapper1.setup("servlet.MainServlet");
-		DefaultWrapper wrapper2 = new DefaultWrapper();
+		StandardWrapper wrapper2 = new StandardWrapper();
 		wrapper2.setup("servlet.ToyServlet");
 		
 		//将wrapper放到context里面
-		DefaultContext context = new DefaultContext();
+		StandardContext context = new StandardContext();
 		context.addChild(wrapper1);
 		context.addChild(wrapper2);
 		context.addServletMapping("/main", "servlet.MainServlet");

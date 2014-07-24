@@ -84,7 +84,7 @@ public class Connector implements Runnable, LifeCycle{
 	/**
 	 * 启动connector，即开启一个新的线程执行任务
 	 * （为的是可以异步返回，从而在未来可以同时运行多个connector）
-	 * （否则一个服务器只能启动一个connector了，因为同步阻塞）
+	 * （否则一个服务器只能启动一个connector了，同步阻塞）
 	 * 要注意的是，在后面每个connector还会再使用多个线程来操作processor
 	 * 那个时候才是主要为了并发而存在的，为了同时接受多个请求
 	 * 但现在不是，一般情况下当下connector只有这一个线程
@@ -98,7 +98,7 @@ public class Connector implements Runnable, LifeCycle{
 			Thread t = new Thread(this);
 			t.start();
 		}else{
-			Logger.debug("Connector被重复启动了！");
+			Logger.warning("Connector被重复启动了！");
 		}
 	}
 
