@@ -18,4 +18,9 @@ public interface Container extends LifeCycle{
 	void setParent(Container parent);
 	void addRepository(String relativeRepoPath);
 	List<Repository> getRepositories();
+	
+	/**
+	 * 同时容器与它相关的repository发生了修改
+	 */
+	void repositoryUpdateNotify();
 }

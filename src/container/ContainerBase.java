@@ -34,6 +34,10 @@ public class ContainerBase implements Container{
 		if( started )
 			Logger.warning("本Container重复启动");
 		
+		//先启动所有（子）容器所依赖的类，然后再启动子容器，否则会有以来缺失的问题
+		if( loader != null )
+			loader.start();
+		
 		//所谓容器的启动其实就是启动其所有的子容器(当然这只是基容器的行为)
 		for( Container c : children ){
 			c.start();
@@ -171,7 +175,11 @@ public class ContainerBase implements Container{
 	private String normalizeDirPostfix(String s){
 		if( !s.endsWith("/") )
 			s = s+"/";
-		
 		return s;
+	}
+
+	@Override
+	public void repositoryUpdateNotify() {
+		
 	}
 }

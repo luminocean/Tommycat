@@ -2,6 +2,8 @@ package container.loader;
 
 import javax.servlet.Servlet;
 
-public interface Loader {
+import core.LifeCycle;
+
+public interface Loader extends LifeCycle{
 	Servlet loadServlet(String servletName);
 }
