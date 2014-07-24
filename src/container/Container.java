@@ -16,6 +16,6 @@ public interface Container extends LifeCycle{
 	void setLoader(Loader loader);
 	Container getParent();
 	void setParent(Container parent);
-	void addRepository(String repoPath);
+	void addRepository(String relativeRepoPath);
 	List<Repository> getRepositories();
 }

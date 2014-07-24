@@ -118,7 +118,27 @@ public class ContainerBase implements Container{
 	}
 
 	@Override
-	public void addRepository(String repoPath) {
+	public void addRepository(String relativeRepoPath) {
+		String repoPath = null;
+		
+		//上下文路径（此上下文非彼上下文）
+		//服务器目录 + webApp目录
+		String contextPath = System.getProperty("user.dir")
+				.replace('\\', '/') + "/" +"WebApps/"+ name;
+		contextPath = normalizeDirPostfix(contextPath);
+		
+		
+		repoPath = contextPath;
+		
+		if( name == null ){
+			Logger.error("Context的name为空！无法构建context路径");
+			return;
+		}
+		
+		repoPath = repoPath + relativeRepoPath;
+		repoPath = normalizeDirPostfix(repoPath);
+		
+		
 		File file = new File(repoPath);
 		if( !file.exists() ){
 			Logger.warning("添加的代码存放位置不存在: repoPath = "+repoPath);
@@ -141,5 +161,17 @@ public class ContainerBase implements Container{
 		}
 			
 		return returnList;
+	}
+	
+	/**
+	 * 标准化后缀，对于目录如果结尾没有/则加上
+	 * @param s
+	 * @return
+	 */
+	private String normalizeDirPostfix(String s){
+		if( !s.endsWith("/") )
+			s = s+"/";
+		
+		return s;
 	}
 }

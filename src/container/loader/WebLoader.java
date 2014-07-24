@@ -87,7 +87,10 @@ public class WebLoader implements Loader{
 			Repository repo = repoList.get(i);
 			//在Java中使用的文件系统是以/分隔的，虽然从windows文件系统取出来是\，因此要进行转换
 			//另外由于查找的目录，所以【必须】要以/结尾
-			String path = repo.getPath().replace('\\', '/')+"/";
+			String path = repo.getPath().replace('\\', '/');
+			if( !path.endsWith("/") )
+				path = path + "/";
+			
 			URL url = new URL("file", null, path);
 			urls[i] = url;
 		}

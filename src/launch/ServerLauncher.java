@@ -26,13 +26,15 @@ public class ServerLauncher {
 		
 		//将wrapper放到context里面，并配置映射
 		StandardContext context = new StandardContext();
+		//设置context名字，很重要，用来拼接代码查找目录的
+		context.setName("Mushroom");
 		context.addChild(wrapper1);
 		context.addChild(wrapper2);
 		context.addServletMapping("/main", "servlet.MainServlet");
 		context.addServletMapping("/toy", "servlet.ToyServlet");
 		
-		//添加代码存放点
-		String repoStr = System.getProperty("user.dir")+File.separator+"WebApps\\Mushroom\\bin\\";
+		//添加代码存放点，只需要填写相对路径，也不用考虑要不要加后缀分隔符的问题
+		String repoStr = "bin";
 		context.addRepository(repoStr);
 		
 		
