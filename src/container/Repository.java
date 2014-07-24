@@ -1,6 +1,8 @@
 package container;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * 包装了所有代码存放点的信息
@@ -19,5 +21,28 @@ public class Repository {
 
 	public String getPath() {
 		return file.getPath();
+	}
+
+	public long getModifiedTime() {
+		long latestTime = 0;
+		
+		Queue<File> fileQueue = new LinkedList<File>();
+		fileQueue.add(file);
+		
+		while( fileQueue.size() > 0 ){
+			File f = fileQueue.poll();
+			
+			if( f.isDirectory() ){
+				File[] subFiles = f.listFiles();
+				for( File s: subFiles ){
+					if( s.lastModified() > latestTime )
+						latestTime  = s.lastModified();
+							
+					fileQueue.add(s);
+				}
+			}
+		}
+		
+		return latestTime;
 	}
 }

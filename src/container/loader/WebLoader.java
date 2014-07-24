@@ -84,9 +84,8 @@ public class WebLoader implements Loader{
 			if( !path.endsWith("/") )
 				path = path + "/";
 			
-			//可以注意一下URL new的方式//
+			//可以注意一下URL new的方式
 			URL url = new URL("file", null, path);
-			/////////////
 			
 			urls[i] = url;
 		}
@@ -101,9 +100,19 @@ public class WebLoader implements Loader{
 	private void startWatchingRepositories() {
 		//内嵌一个线程开始监视
 		Thread t = new Thread(new Runnable() {
-			@Override
 			public void run() {
-				
+				//进入无限循环
+				while(true){try{
+					long t = System.currentTimeMillis();
+					Thread.sleep(3000);
+					
+					for(Repository r: repoList){
+						if( r.getModifiedTime() > t ){
+							relatedContainer.repositoryUpdateNotify();
+							continue;
+						}
+					}
+				}catch(Exception e){}}
 			}
 		});
 		
@@ -113,6 +122,5 @@ public class WebLoader implements Loader{
 	@Override
 	public void stop() {
 		// TODO Auto-generated method stub
-		
 	}
 }

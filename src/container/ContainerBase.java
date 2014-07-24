@@ -180,6 +180,6 @@ public class ContainerBase implements Container{
 
 	@Override
 	public void repositoryUpdateNotify() {
-		
+		System.out.println("Repo发生修改！！");
 	}
 }
