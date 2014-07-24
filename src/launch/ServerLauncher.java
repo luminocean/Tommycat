@@ -1,4 +1,5 @@
 package launch;
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -23,12 +24,17 @@ public class ServerLauncher {
 		StandardWrapper wrapper1 = new StandardWrapper("servlet.MainServlet");
 		StandardWrapper wrapper2 = new StandardWrapper("servlet.ToyServlet");
 		
-		//将wrapper放到context里面
+		//将wrapper放到context里面，并配置映射
 		StandardContext context = new StandardContext();
 		context.addChild(wrapper1);
 		context.addChild(wrapper2);
 		context.addServletMapping("/main", "servlet.MainServlet");
 		context.addServletMapping("/toy", "servlet.ToyServlet");
+		
+		//添加代码存放点
+		String repoStr = System.getProperty("user.dir")+File.separator+"WebApps\\Mushroom\\bin\\";
+		context.addRepository(repoStr);
+		
 		
 		//connector将会针对每一个请求开启一个线程调用该container实例
 		connector.setContainer(context);

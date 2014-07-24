@@ -1,17 +1,16 @@
 package container;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.ServletException;
 
-import sun.launcher.resources.launcher;
 import util.Logger;
 import connector.request.Request;
 import connector.response.Response;
 import container.loader.Loader;
-import core.LifeCycle;
 
 /**
  * 基础的container类，包含了container里面的很多通用方法与特性
@@ -24,10 +23,9 @@ public class ContainerBase implements Container{
 	//所有子容器的列表
 	protected List<Container> children = new LinkedList<Container>();
 	protected String name;
-	
 	protected Loader loader;
 	protected Container parent;
-
+	protected List<Repository> repositories = new LinkedList<Repository>();
 	//标志是否已经启动
 	protected boolean started;
 
@@ -117,5 +115,31 @@ public class ContainerBase implements Container{
 	@Override
 	public void setLoader(Loader loader) {
 		this.loader = loader;
+	}
+
+	@Override
+	public void addRepository(String repoPath) {
+		File file = new File(repoPath);
+		if( !file.exists() ){
+			Logger.warning("添加的代码存放位置不存在: repoPath = "+repoPath);
+			return;
+		}
+			
+		Repository repo = new Repository(file);
+		repositories.add(repo);
+	}
+
+	@Override
+	public List<Repository> getRepositories() {
+		List<Repository> returnList = repositories;
+		
+		//获取父容器的repositories加到自己这里
+		if( parent != null ){
+			List<Repository> parentRepos = parent.getRepositories();
+			if(parentRepos != null ) 
+				returnList.addAll(parentRepos);
+		}
+			
+		return returnList;
 	}
 }

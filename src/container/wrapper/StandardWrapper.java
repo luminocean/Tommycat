@@ -46,6 +46,7 @@ public class StandardWrapper extends ContainerBase implements Wrapper {
 		setBasicValve(basicValve);
 		
 		//启动剩余部分
+		//这行并不是可有可无的，它还会检查是否重复启动之类的事情
 		super.start();
 	}
 
