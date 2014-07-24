@@ -6,8 +6,11 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
+import sun.launcher.resources.launcher;
+import util.Logger;
 import connector.request.Request;
 import connector.response.Response;
+import container.loader.Loader;
 import core.LifeCycle;
 
 /**
@@ -15,23 +18,42 @@ import core.LifeCycle;
  * @author zhangh-fnst
  *
  */
-public class ContainerBase implements Container, LifeCycle{
+public class ContainerBase implements Container{
 	//容器所持有的pipeline，将最终处理所有valve以及servlet调用
 	protected Pipeline pipeline = new Pipeline();
 	//所有子容器的列表
 	protected List<Container> children = new LinkedList<Container>();
 	protected String name;
+	
+	protected Loader loader;
+	protected Container parent;
+
+	//标志是否已经启动
+	protected boolean started;
 
 	@Override
 	public void start() {
-		// TODO Auto-generated method stub
+		if( started )
+			Logger.warning("本Container重复启动");
 		
+		//所谓容器的启动其实就是启动其所有的子容器(当然这只是基容器的行为)
+		for( Container c : children ){
+			c.start();
+		}
+		
+		started = true;
 	}
 
 	@Override
 	public void stop() {
-		// TODO Auto-generated method stub
+		if( !started )
+			Logger.warning("本Container重复关闭");
 		
+		for( Container c : children ){
+			c.stop();
+		}
+		
+		started = false;
 	}
 
 	@Override
@@ -47,6 +69,9 @@ public class ContainerBase implements Container, LifeCycle{
 
 	@Override
 	public void addChild(Container child) {
+		//在这里设置父子关系
+		child.setParent(this);
+		
 		children.add(child);
 	}
 
@@ -62,5 +87,35 @@ public class ContainerBase implements Container, LifeCycle{
 	@Override
 	public void setBasicValve(Valve basicValve) {
 		pipeline.setBasicValve(basicValve);
+	}
+
+	@Override
+	public Loader getLoader() {
+		//如果自己有loader就直接返回
+		if( loader != null )
+			return loader;
+		//否则问父容器要
+		if( parent != null )
+			return parent.getLoader();
+		//如果没有父容器，那么只能返回空了
+		return null;
+	}
+
+	@Override
+	public Container getParent() {
+		if( parent != null )
+			return parent;
+		
+		return null;
+	}
+
+	@Override
+	public void setParent(Container parent) {
+		this.parent = parent;
+	}
+
+	@Override
+	public void setLoader(Loader loader) {
+		this.loader = loader;
 	}
 }

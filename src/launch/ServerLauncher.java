@@ -20,10 +20,8 @@ public class ServerLauncher {
 		Connector connector = new Connector();
 
 		//每个wrapper都会关联唯一的一个servlet，在创建后设置该servlet的名字以便加载该类
-		StandardWrapper wrapper1 = new StandardWrapper();
-		wrapper1.setup("servlet.MainServlet");
-		StandardWrapper wrapper2 = new StandardWrapper();
-		wrapper2.setup("servlet.ToyServlet");
+		StandardWrapper wrapper1 = new StandardWrapper("servlet.MainServlet");
+		StandardWrapper wrapper2 = new StandardWrapper("servlet.ToyServlet");
 		
 		//将wrapper放到context里面
 		StandardContext context = new StandardContext();
@@ -38,6 +36,8 @@ public class ServerLauncher {
 		try {
 			//异步启动connector
 			connector.start();
+			//启动context，connector是不会去启动context的
+			context.start();
 			
 			//主线程暂停
 			System.in.read();

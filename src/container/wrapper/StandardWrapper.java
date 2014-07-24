@@ -15,31 +15,56 @@ import connector.response.Response;
 import container.Container;
 import container.ContainerBase;
 import container.Pipeline;
+import container.loader.Loader;
 
 public class StandardWrapper extends ContainerBase implements Wrapper {
-	/**
-	 * 给当前的wrapper配置pipeline，包括BasicValve的配置
-	 * @param servletName
-	 */
-	public void setup(String servletName){
-		Servlet servlet = loadServlet(servletName);
-		
-		//配置BasicValve！否则Servlet就不会被处理了！！千万注意别忘记了！
-		BasicWrapperValve basicValve = new BasicWrapperValve(servlet);
-		setBasicValve(basicValve);
+	
+	/**pipeline
+	 * invoke()
+	 * children
+	 * 均包含在父类中*/
+	
+	private String servletName;
+	
+	public StandardWrapper(String servletName){
+		this.servletName = servletName;
 		
 		//该wrapper的名字，上层的context会用这个名字来查找wrapper，以此来分配请求
 		//wrapper名字与它关联的servlet相同，这一点请注意
 		setName(servletName);
 	}
+	
+	//重写启动方法
+	@Override
+	public void start() {
+		//在这里加载需要使用的servlet!
+		Servlet servlet = loadServlet(servletName);
+			
+		//配置BasicValve！否则Servlet就不会被处理了！！千万注意别忘记了！
+		//其实是在配置pipeline
+		BasicWrapperValve basicValve = new BasicWrapperValve(servlet);
+		setBasicValve(basicValve);
+		
+		//启动剩余部分
+		super.start();
+	}
 
+	@Override
+	public void stop() {
+		super.stop();
+	}
+	
+	
 	/**
 	 * 加载这个wrapper所管理的servlet
 	 * @param servletName
 	 * @return
 	 */
 	private Servlet loadServlet(String servletName) {
-		Servlet targetServlet = ServletLoader.loadServlet(servletName);
+		//获取loader用来加载servlet（这可loader很可能是从父容器那里拿过来的）
+		Loader loader = getLoader();
+		
+		Servlet targetServlet = loader.loadServlet(servletName);
 		
 		return targetServlet;
 	}
