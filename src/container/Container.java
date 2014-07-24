@@ -23,4 +23,8 @@ public interface Container extends LifeCycle{
 	 * 同时容器与它相关的repository发生了修改
 	 */
 	void repositoryUpdateNotify();
+	/**
+	 * 发现容器所属的类被修改了于是就需要通知容器重新加载
+	 */
+	void reload();
 }

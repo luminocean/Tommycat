@@ -32,7 +32,7 @@ public class ContainerBase implements Container{
 	@Override
 	public void start() {
 		if( started )
-			Logger.warning("本Container重复启动");
+			Logger.warning("Container("+ this.getClass().getName() +")重复启动");
 		
 		//先启动所有（子）容器所依赖的类，然后再启动子容器，否则会有以来缺失的问题
 		if( loader != null )
@@ -49,7 +49,7 @@ public class ContainerBase implements Container{
 	@Override
 	public void stop() {
 		if( !started )
-			Logger.warning("本Container重复关闭");
+			Logger.warning("Container("+ this.getClass().getName() +")重复关闭");
 		
 		for( Container c : children ){
 			c.stop();
@@ -180,6 +180,14 @@ public class ContainerBase implements Container{
 
 	@Override
 	public void repositoryUpdateNotify() {
-		System.out.println("Repo发生修改！！");
+		Logger.info("Repository发生修改, 容器开始重新加载");
+		reload();
+	}
+
+	@Override
+	public void reload() {
+		stop();
+		start();
+		Logger.info("重新加载完成");
 	}
 }

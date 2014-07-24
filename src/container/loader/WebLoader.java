@@ -22,6 +22,8 @@ public class WebLoader implements Loader{
 	private ClassLoader classLoader;
 	
 	private List<Repository> repoList;
+	
+	private Thread watcher;
 
 	public WebLoader(Container container) {
 		this.relatedContainer = container;
@@ -98,25 +100,29 @@ public class WebLoader implements Loader{
 	 * 监视repo的变化，如果发现了变化则通知container
 	 */
 	private void startWatchingRepositories() {
+		if( watcher != null )
+			return;
+		
 		//内嵌一个线程开始监视
 		Thread t = new Thread(new Runnable() {
 			public void run() {
 				//进入无限循环
 				while(true){try{
 					long t = System.currentTimeMillis();
-					Thread.sleep(3000);
+					Thread.sleep(5000);
 					
 					for(Repository r: repoList){
 						if( r.getModifiedTime() > t ){
 							relatedContainer.repositoryUpdateNotify();
-							continue;
+							break;
 						}
 					}
 				}catch(Exception e){}}
 			}
 		});
 		
-		t.start();
+		watcher = t;
+		watcher.start();
 	}
 
 	@Override
