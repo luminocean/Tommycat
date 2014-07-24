@@ -23,6 +23,7 @@ public class WebLoader implements Loader{
 	
 	private List<Repository> repoList;
 	
+	//修改的监视器，如果有修改就通知关联的container
 	private Thread watcher;
 
 	public WebLoader(Container container) {
@@ -109,7 +110,7 @@ public class WebLoader implements Loader{
 				//进入无限循环
 				while(true){try{
 					long t = System.currentTimeMillis();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					
 					for(Repository r: repoList){
 						if( r.getModifiedTime() > t ){

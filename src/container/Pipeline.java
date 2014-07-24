@@ -17,7 +17,13 @@ public class Pipeline {
 
 	public void setBasicValve(Valve basicValve) {
 		this.basicValve = basicValve;
-		valves.add(basicValve);
+		
+		if( valves.size() == 0 )
+			valves.add(basicValve);
+		else{
+			//替换最后一个valve，也即basic的valve
+			valves.set(valves.size()-1, basicValve);
+		}
 	}
 	
 	public void invoke(Request request, Response response) 

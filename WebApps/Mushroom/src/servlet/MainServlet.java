@@ -29,6 +29,7 @@ public class MainServlet implements Servlet{
 		System.out.println("-- 用户Servlet运行 --");
 		PrintWriter w = res.getWriter();
 		w.println("Welcome to the user servlet domain~~");
+		//w.println("Modified!");
 	}
 
 	@Override
