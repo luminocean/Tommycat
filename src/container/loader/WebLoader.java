@@ -102,6 +102,7 @@ public class WebLoader implements Loader{
 	 * 监视repo的变化，如果发现了变化则通知container
 	 */
 	private void startWatchingRepositories() {
+		//如果已经有一个watcher在监视了，那么直接返回就可以了
 		if( watcher != null )
 			return;
 		

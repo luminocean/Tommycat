@@ -26,7 +26,7 @@ public class ServerLauncher {
 		
 		//将wrapper放到context里面，并配置映射
 		StandardContext context = new StandardContext();
-		//设置context名字，很重要，用来拼接代码查找目录的
+		//设置context的独占属性
 		context.setPath("/mushroom");
 		context.setDocBase("Mushroom");
 		context.addChild(wrapper1);
@@ -35,6 +35,8 @@ public class ServerLauncher {
 		context.addServletMapping("/toy", "servlet.ToyServlet");
 		
 		//添加代码存放点，只需要填写相对路径，也不用考虑要不要加后缀分隔符的问题
+		//在这里添加的项目里面的servlet被编译后被eclipse默认放到了bin文件夹下，因此这里写的是bean
+		//如果是真实的web项目，那么应该是build/classes
 		String repoStr = "bin";
 		context.addRepository(repoStr);
 		

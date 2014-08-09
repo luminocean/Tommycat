@@ -42,6 +42,9 @@ public class StandardContext extends ContainerBase implements Context {
 	// 子容器的映射集合
 	private Map<String, Container> childrenMap = new HashMap<String, Container>();
 
+	/**
+	 * 主要配置了专门由context使用的的basicContextValve和WebLoader
+	 */
 	public StandardContext() {
 		BasicContextValve basicValve = new BasicContextValve(this);
 		setBasicValve(basicValve);
