@@ -10,6 +10,7 @@ import javax.servlet.Servlet;
 import util.Logger;
 import container.Container;
 import container.Repository;
+import container.context.Context;
 import core.LifeCycle;
 
 /**
@@ -18,7 +19,7 @@ import core.LifeCycle;
  *
  */
 public class WebLoader implements Loader{
-	private Container relatedContainer;
+	private Context relatedContext;
 	private ClassLoader classLoader;
 	
 	private List<Repository> repoList;
@@ -26,14 +27,14 @@ public class WebLoader implements Loader{
 	//修改的监视器，如果有修改就通知关联的container
 	private Thread watcher;
 
-	public WebLoader(Container container) {
-		this.relatedContainer = container;
+	public WebLoader(Context context) {
+		this.relatedContext = context;
 	}
 
 	@Override
 	public void start() {
 		//从关联容器获取repo的列表
-		repoList = relatedContainer.getRepositories();
+		repoList = relatedContext.getRepositories();
 		//创建所管理的classLoader
 		classLoader = createClassLoader();
 		
@@ -114,7 +115,7 @@ public class WebLoader implements Loader{
 					
 					for(Repository r: repoList){
 						if( r.getModifiedTime() > t ){
-							relatedContainer.repositoryUpdateNotify();
+							relatedContext.repositoryUpdateNotify();
 							break;
 						}
 					}

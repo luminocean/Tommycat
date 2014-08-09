@@ -27,7 +27,8 @@ public class ServerLauncher {
 		//将wrapper放到context里面，并配置映射
 		StandardContext context = new StandardContext();
 		//设置context名字，很重要，用来拼接代码查找目录的
-		context.setName("Mushroom");
+		context.setPath("/mushroom");
+		context.setDocBase("Mushroom");
 		context.addChild(wrapper1);
 		context.addChild(wrapper2);
 		context.addServletMapping("/main", "servlet.MainServlet");
