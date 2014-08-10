@@ -30,6 +30,9 @@ public class BasicContextValve implements Valve{
 			ValveContext valveContext) throws ServletException, IOException {
 		String requestUri = request.getUri();
 		
+		//在把request往下传之前先设置好session manager
+		request.setSessionManager(context.getSessionManager());
+		
 		//先判断是否是静态资源
 		if( FileHelper.hasResource(requestUri)){
 			response.sendStaticResource();
@@ -42,7 +45,6 @@ public class BasicContextValve implements Valve{
 			if( wrapper == null ){
 				Logger.error("配置了uri到servlet的映射，但是找不到这个servlet所在的wrapper!");
 			}else{
-				request.setSessionManager(context.getSessionManager());
 				//调用查找到的wrapper，继续往下传
 				wrapper.invoke(request, response);
 			}

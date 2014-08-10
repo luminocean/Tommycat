@@ -40,10 +40,19 @@ public class SessionManager implements LifeCycle{
 		char[] sessionId = new char[32];
 		
 		for(int i=0; i<sessionId.length; i++){
-			int randIndex = rand.nextInt(26);
-			int charCode = randIndex+65;
-			char randChar = (char)charCode;
-			sessionId[i] = randChar;
+			int randIndex = rand.nextInt(36);
+			//字母
+			if( randIndex < 26 ){
+				int charCode = randIndex+65;
+				char randChar = (char)charCode;
+				sessionId[i] = randChar;
+			}else{
+				//数字
+				int charCode = randIndex-26+48;
+				char randChar = (char)charCode;
+				sessionId[i] = randChar;
+			}
+			
 		}
 		
 		return new String(sessionId);

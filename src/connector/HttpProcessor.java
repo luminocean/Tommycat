@@ -114,6 +114,9 @@ public class HttpProcessor implements Runnable, LifeCycle{
 			//从现在开始交给container来处理后续的事情！
 			connector.getContainer().invoke(request, response);
 			
+			//悄悄的模拟servlet获取session的动作
+			request.getSession();
+			
 			//非常重要的一步！将response的内容输出到socket的输出流中！
 			//如果缺了这一步那本客户端那边是收不到消息的
 			//依据职责分配的原则，这部分内容并不是container所要完成的工作

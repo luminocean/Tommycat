@@ -123,6 +123,7 @@ public class Request{
 		Session session = sessionManager.createSession();
 		
 		//向客户端回写新的SESSIONID!
+		response.setSession(session.getSessionId());
 		
 		return session;
 	}

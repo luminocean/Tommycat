@@ -54,16 +54,6 @@ public class Response {
 		return writer;
 	}
 
-	private void writeHead(OutputStream os, int length) {
-		PrintWriter writer = new PrintWriter(os);
-		
-		writer.println("HTTP/1.1 200 OK");
-		writer.println("Content-Type: text/html;charset=utf-8");
-		writer.println("Content-Length: "+length);
-		writer.println("Connection: keep-alive");
-		
-		writer.flush();
-	}
 
 	public Request getRequest() {
 		return request;
@@ -72,6 +62,12 @@ public class Response {
 	public void setRequest(Request request) {
 		this.request = request;
 	}
+
+	public void setSession(String sessionId) {
+		responseStream.setSession(sessionId);
+	}
+
+	
 	
 	/*
 	private void writeResponse(OutputStream os, String body) {

@@ -57,6 +57,7 @@ public class ResponseStream extends OutputStream{
 		//输出响应头部
 		addHeadParam("Content-Type", "text/html;charset=utf-8");
 		addHeadParam("Content-Length", bufferSize+"");
+		//addHeadParam("Connection", "keep-alive");
 		writeHeadParams(writer, headParams);
 
 		//不可缺少的空行
@@ -76,6 +77,7 @@ public class ResponseStream extends OutputStream{
 	private void writeHeadParams(PrintWriter writer, List<Pair> headParams) {
 		for(Pair p: headParams){
 			writer.println(p.key+": "+p.value);
+			System.out.println(p.key +", "+p.value);
 		}
 	}
 
@@ -99,6 +101,10 @@ public class ResponseStream extends OutputStream{
 		p.value = value;
 		
 		headParams.add(p);
+	}
+	
+	public void setSession(String sessionId) {
+		addHeadParam("Set-Cookie", "JSESSIONID="+sessionId);
 	}
 	
 	/**

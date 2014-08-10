@@ -5,6 +5,7 @@ import java.util.Map;
 
 public class RequestHeader {
 	private Map<String, String> headerMap = new HashMap<String, String>();
+	private Map<String, String> cookieMap = new HashMap<String, String>();
 
 	public RequestHeader(String headerStr) throws Exception {
 		String[] lines = headerStr.split("\n");
@@ -20,6 +21,21 @@ public class RequestHeader {
 			
 			headerMap.put(key, value);
 		}
+		
+		//解析cookies
+		String cookiesStr = headerMap.get("Cookie");
+		if( cookiesStr != null ){
+			String[] cookieStrs = cookiesStr.split(";");
+			for(String cookieStr: cookieStrs){
+				String[] parts = cookieStr.split("=");
+				if( parts.length < 2 )
+					continue;
+				String key = parts[0];
+				String value = parts[1];
+				
+				cookieMap.put(key, value);
+			}
+		}
 	}
 	
 	public boolean isKeepAlive() {
@@ -33,7 +49,7 @@ public class RequestHeader {
 	}
 
 	public String getSessionId() {
-		return headerMap.get("JSESSIONID");
+		return cookieMap.get("JSESSIONID");
 	}
 
 }
