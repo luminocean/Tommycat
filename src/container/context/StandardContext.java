@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 
+import session.SessionManager;
 import util.Logger;
 import util.os.FileHelper;
 import connector.request.Request;
@@ -23,13 +24,16 @@ import container.loader.WebLoader;
 import core.LifeCycle;
 
 public class StandardContext extends ContainerBase implements Context {
-
-	private List<Repository> repositories = new LinkedList<Repository>();
+	//Context负责管理的Session管理器
+	private SessionManager sessionManager;
+	
 	//用于将来映射到该context所使用的路径，形如 /mushroom/
 	private String contextPath;
 	//该context真正对应的文件系统的文件夹名字,形如Mushroom，里面放置的是所有的web项目文件
 	private String docBase;
 	
+	//其他组件真正要请求的repo列表，由下面的relativeRepoPaths String列表转化而来
+	private List<Repository> repositories = new LinkedList<Repository>();
 	//相对与context目录的代码存放路径，用于临时存放add进来的相对路径，在用户获取repositories的时候一次性进行转化
 	private List<String> relativeRepoPaths = new LinkedList<String>();
 	
@@ -52,16 +56,25 @@ public class StandardContext extends ContainerBase implements Context {
 		// 在Context里面配置一个Loader
 		Loader loader = new WebLoader(this);
 		super.setLoader(loader);
+		
+		this.sessionManager = new SessionManager();
 	}
 
 	@Override
 	public void start() {
 		// 先启动所所依赖的类，然后再启动子容器，否则会有依赖缺失的问题
-		if (loader != null){
+		if (loader != null)
 			loader.start();
-		}else{
+		else
 			Logger.error("没有找到Loader类！将无法加载servlet等资源！");
+		
+		
+		if( sessionManager != null )
+			sessionManager.start();
+		else{
+			Logger.error("没有找到SessionManager类！将无法处理Session相关功能！");
 		}
+		
 
 		super.start();
 	}
@@ -143,6 +156,11 @@ public class StandardContext extends ContainerBase implements Context {
 
 	public void setDocBase(String docBase) {
 		this.docBase = docBase;
+	}
+	
+	@Override
+	public SessionManager getSessionManager() {
+		return sessionManager;
 	}
 
 	/**

@@ -15,10 +15,12 @@ import container.Valve;
 import container.ValveContext;
 
 public class BasicContextValve implements Valve{
+	private Context context;
 	private Map<String, String> servletNameMap;
 	private Map<String, Container> childrenMap;
 	
 	public BasicContextValve(Context context) {
+		this.context = context;
 		this.servletNameMap = context.getServletNameMap();
 		this.childrenMap = context.getChildrenMap();
 	}
@@ -37,11 +39,14 @@ public class BasicContextValve implements Valve{
 		String mappedServletName = servletNameMap.get(requestUri);
 		if( mappedServletName != null ){
 			Container wrapper = childrenMap.get(mappedServletName);
-			if( wrapper == null )
+			if( wrapper == null ){
 				Logger.error("配置了uri到servlet的映射，但是找不到这个servlet所在的wrapper!");
-			else
+			}else{
+				request.setSessionManager(context.getSessionManager());
 				//调用查找到的wrapper，继续往下传
 				wrapper.invoke(request, response);
+			}
+				
 		}else{
 			Logger.debug("找不到请求uri到servlet的映射，或是任何静态资源");
 			Logger.debug("请求uri："+requestUri);

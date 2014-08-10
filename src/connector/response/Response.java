@@ -19,9 +19,8 @@ public class Response {
 	private ResponseStream responseStream;
 	
 	
-	public Response(OutputStream os, Request request) {
+	public Response(OutputStream os) {
 		this.os = os;
-		this.request = request;
 		
 		this.responseStream = new ResponseStream(os);
 	}
@@ -55,19 +54,6 @@ public class Response {
 		return writer;
 	}
 
-	private void writeResponse(OutputStream os, String body) {
-		writeHead(os, body.length());
-		
-		PrintWriter writer = new PrintWriter(os);
-		writer.println(); //别忘记输出空行
-		
-		//向客户端回写静态资源
-		writer.print(body);
-		
-		//如果客户端只接收一次的话，使用自动flush就会提前把内容给flush掉了，于是就会缺东西
-		writer.flush();
-	}
-
 	private void writeHead(OutputStream os, int length) {
 		PrintWriter writer = new PrintWriter(os);
 		
@@ -78,5 +64,26 @@ public class Response {
 		
 		writer.flush();
 	}
+
+	public Request getRequest() {
+		return request;
+	}
+
+	public void setRequest(Request request) {
+		this.request = request;
+	}
 	
+	/*
+	private void writeResponse(OutputStream os, String body) {
+		writeHead(os, body.length());
+	
+		PrintWriter writer = new PrintWriter(os);
+		writer.println(); //别忘记输出空行
+	
+		//向客户端回写静态资源
+		writer.print(body);
+	
+		//如果客户端只接收一次的话，使用自动flush就会提前把内容给flush掉了，于是就会缺东西
+		writer.flush();
+	}*/
 }

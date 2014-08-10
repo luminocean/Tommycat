@@ -5,8 +5,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.servlet.ServletOutputStream;
+
+import com.sun.corba.se.impl.ior.WireObjectKeyTemplate;
 
 /**
  * 
@@ -17,6 +21,7 @@ public class ResponseStream extends OutputStream{
 	private OutputStream os;
 	
 	private ByteArrayOutputStream buffer;
+	private List<Pair> headParams = new LinkedList<Pair>();
 
 	public ResponseStream(OutputStream os) {
 		this.os = os;
@@ -45,11 +50,14 @@ public class ResponseStream extends OutputStream{
 	public void flushAll() throws IOException{
 		//要注意的是输出过程中只能用这一个writer，不要一会用writer一会又用os，因为writer里面是否缓存的，而flush只能用一次，切记
 		PrintWriter writer = new PrintWriter(os, false);
-		//输出响应头部
+		
 		int bufferSize = buffer.size();
-		writer.println("HTTP/1.1 200 OK");
-		writer.println("Content-Type: text/html;charset=utf-8");
-		writer.println("Content-Length: "+bufferSize);
+		//写首行
+		writeHeadLine(writer, "HTTP/1.1 200 OK");
+		//输出响应头部
+		addHeadParam("Content-Type", "text/html;charset=utf-8");
+		addHeadParam("Content-Length", bufferSize+"");
+		writeHeadParams(writer, headParams);
 
 		//不可缺少的空行
 		writer.println();
@@ -58,5 +66,48 @@ public class ResponseStream extends OutputStream{
 		writer.print(new String(buffer.toByteArray()));
 		//一次性的flush,否则连浏览器都会出问题
 		writer.flush();
+	}
+	
+	/**
+	 * 写入所有的头部参数
+	 * @param writer
+	 * @param headParams
+	 */
+	private void writeHeadParams(PrintWriter writer, List<Pair> headParams) {
+		for(Pair p: headParams){
+			writer.println(p.key+": "+p.value);
+		}
+	}
+
+	/**
+	 * 写入首行
+	 * @param writer
+	 * @param headLine
+	 */
+	private void writeHeadLine(PrintWriter writer, String headLine){
+		writer.println(headLine);
+	}
+	
+	/**
+	 * 添加一个头部的参数（可能被外部的类所调用）
+	 * @param key
+	 * @param value
+	 */
+	public void addHeadParam(String key, String value){
+		Pair p = new Pair();
+		p.key = key;
+		p.value = value;
+		
+		headParams.add(p);
+	}
+	
+	/**
+	 * 内部使用的键值对
+	 * @author luMinO
+	 *
+	 */
+	class Pair{
+		String key;
+		String value;
 	}
 }

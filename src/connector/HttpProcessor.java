@@ -106,7 +106,10 @@ public class HttpProcessor implements Runnable, LifeCycle{
 		Response response = null;
 		do{
 			request = new Request(is);
-			response = new Response(os, request);
+			response = new Response(os);
+			//互相关联request和response
+			request.setResponse(response);
+			response.setRequest(request);
 			
 			//从现在开始交给container来处理后续的事情！
 			connector.getContainer().invoke(request, response);

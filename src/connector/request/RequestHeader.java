@@ -32,4 +32,8 @@ public class RequestHeader {
 		return headerMap.get(key);
 	}
 
+	public String getSessionId() {
+		return headerMap.get("JSESSIONID");
+	}
+
 }

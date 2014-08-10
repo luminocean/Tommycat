@@ -17,14 +17,20 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import connector.response.Response;
+import session.Session;
+import session.SessionManager;
 import util.Logger;
 
 
 public class Request{
 	private static final int BUFFER_SIZE = 2048;
+	
+	private SessionManager sessionManager;
+	private Response response;
+	
 	//请求里面的全部内容的字符串，包括首行以、请求头部以及报文体
 	private String content;
-	
 	//请求首行对象
 	private RequestLine requestLine;
 	//请求头部对象
@@ -98,7 +104,28 @@ public class Request{
 		
 		return headerStr;
 	}
-
+	
+	public Session getSession(){
+		if( sessionManager == null ){
+			Logger.error("没有SessionManager！将无法交出Session!");
+			return null;
+		}
+		
+		String sessionId = requestHeader.getSessionId();
+		//如果用户的http请求中已经带了sessionId了，那么就把这个session找出来返回
+		if( sessionId != null ){
+			Session session = sessionManager.findSession(sessionId);
+			if( session != null )
+				return session;
+		}
+		
+		//如果请求中没有sessionId或者找不到这个session，那么就创建一个新的返回
+		Session session = sessionManager.createSession();
+		
+		//向客户端回写新的SESSIONID!
+		
+		return session;
+	}
 	
 	public String getHeaderParam(String key){
 		String value = requestHeader.getHeaderParam(key);
@@ -118,12 +145,23 @@ public class Request{
 		return requestLine.getAttributeMap();
 	}
 	
-	
 	public String toString(){
 		return content;
 	}
 	
 	public String getUri() {
 		return requestLine.getUri();
+	}
+
+	public void setSessionManager(SessionManager sessionManager) {
+		this.sessionManager = sessionManager;
+	}
+
+	public Response getResponse() {
+		return response;
+	}
+
+	public void setResponse(Response response) {
+		this.response = response;
 	}
 }
