@@ -57,7 +57,7 @@ public class ResponseStream extends OutputStream{
 		//输出响应头部
 		addHeadParam("Content-Type", "text/html;charset=utf-8");
 		addHeadParam("Content-Length", bufferSize+"");
-		//addHeadParam("Connection", "keep-alive");
+		//把所有的添加的头部参数写入响应
 		writeHeadParams(writer, headParams);
 
 		//不可缺少的空行
@@ -77,7 +77,6 @@ public class ResponseStream extends OutputStream{
 	private void writeHeadParams(PrintWriter writer, List<Pair> headParams) {
 		for(Pair p: headParams){
 			writer.println(p.key+": "+p.value);
-			System.out.println(p.key +", "+p.value);
 		}
 	}
 

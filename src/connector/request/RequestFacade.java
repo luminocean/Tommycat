@@ -10,10 +10,12 @@ import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletInputStream;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import session.Session;
+import session.SessionFacade;
 
 
 
@@ -329,7 +331,12 @@ public class RequestFacade implements HttpServletRequest{
 
 	@Override
 	public HttpSession getSession() {
-		// TODO Auto-generated method stub
+		Session session = request.getSession();
+		if( session != null ){
+			HttpSession httpSession = new SessionFacade(session);
+			return httpSession;
+		}
+		
 		return null;
 	}
 
