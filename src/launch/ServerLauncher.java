@@ -36,7 +36,7 @@ public class ServerLauncher {
 		//添加代码存放点，只需要填写相对路径，也不用考虑要不要加后缀分隔符的问题
 		//在这里添加的项目里面的servlet被编译后被eclipse默认放到了bin文件夹下，因此这里写的是bean
 		//如果是真实的web项目，那么应该是build/classes
-		String repoStr = "bin";
+		String repoStr = "/build/classes";
 		context.addRepository(repoStr);
 		
 		

@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.servlet.ServletException;
 
 import session.SessionManager;
+import util.Constants;
 import util.Logger;
 import util.os.FileHelper;
 import connector.request.Request;
@@ -34,8 +35,8 @@ public class StandardContext extends ContainerBase implements Context {
 	
 	//其他组件真正要请求的repo列表，由下面的relativeRepoPaths String列表转化而来
 	private List<Repository> repositories = new LinkedList<Repository>();
-	//相对与context目录的代码存放路径，用于临时存放add进来的相对路径，在用户获取repositories的时候一次性进行转化
-	private List<String> relativeRepoPaths = new LinkedList<String>();
+	//相对与context目录的代码存放根路径（如/bin），用于临时存放add进来的相对路径，在用户获取repositories的时候一次性进行转化
+	private List<String> repoPaths = new LinkedList<String>();
 	
 	/**
 	 * pipeline invoke() children 均包含在父类中
@@ -102,8 +103,8 @@ public class StandardContext extends ContainerBase implements Context {
 	}
 
 	@Override
-	public void addRepository(String relativeRepoPath) {
-		relativeRepoPaths.add(relativeRepoPath);
+	public void addRepository(String repoPath) {
+		repoPaths.add(repoPath);
 	}
 
 	@Override
@@ -115,13 +116,12 @@ public class StandardContext extends ContainerBase implements Context {
 		
 		repositories.clear();
 		
-		for( String relativeRepoPath: relativeRepoPaths ){
+		for( String relativeRepoPath: repoPaths ){
 			String repoPath = null;
 
 			// 上下文路径（此上下文非彼上下文）
 			// 服务器目录 + webApp目录 + context目录
-			String absoluteContextPath = System.getProperty("user.dir").replace('\\', '/')
-					+ "/" + "WebApps/" + docBase;
+			String absoluteContextPath = Constants.WEB_ROOT + docBase;
 			absoluteContextPath = normalizeDirPostfix(absoluteContextPath);
 
 			//context的绝对路径加上相对repo路径就可以拼出repo的绝对路径
@@ -177,14 +177,14 @@ public class StandardContext extends ContainerBase implements Context {
 	}
 
 	/**
-	 * 标准化后缀，对于目录如果结尾没有/则加上
+	 * 标准化后缀，对于目录如果结尾有/则去掉
 	 * 
 	 * @param s
 	 * @return
 	 */
 	private String normalizeDirPostfix(String s) {
-		if (!s.endsWith("/"))
-			s = s + "/";
+		if (s.endsWith("/"))
+			s = s.substring(0, s.length()-1);
 		return s;
 	}
 }

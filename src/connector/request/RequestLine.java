@@ -18,7 +18,7 @@ public class RequestLine {
 	public RequestLine(String requestLineStr) throws Exception {
 		String[] parts = requestLineStr.split(" ");
 		if (parts.length != 3)
-			throw new Exception("请求首行不足三部分: " + requestLineStr);
+			throw new Exception("请求首行不足三部分:" + requestLineStr);
 
 		methodString = parts[0];
 		protocal = parts[2];

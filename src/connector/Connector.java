@@ -69,8 +69,10 @@ public class Connector implements Runnable, LifeCycle{
 	private HttpProcessor getProcessor() {
 		//如果池里还有处理器，那么直接返回
 		if( processorPool.size() > 0 ){
-			Logger.debug("从池中取出一个processor！剩余"+(processorPool.size()-1)+"个");
-			return processorPool.pop();
+			HttpProcessor processor =  processorPool.pop();
+			Logger.debug("从池中取出一个processor！剩余"+(processorPool.size())+"个");
+			
+			return processor;
 		}else{
 			Logger.error("处理器池已耗尽，无法获取processor");
 			return null;
@@ -123,6 +125,7 @@ public class Connector implements Runnable, LifeCycle{
 	public void recycle(HttpProcessor processor) {
 		//简单的把processor放回池里即可
 		processorPool.push(processor);
+		Logger.debug("放回一个processor！现有"+(processorPool.size())+"个");
 	}
 
 	@Override

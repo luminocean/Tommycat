@@ -35,31 +35,33 @@ public class HttpProcessor implements Runnable, LifeCycle{
 	 */
 	@Override
 	public void run() {
-		try{
-			while( !isStop ){
-				//先等待socket的到达
-				waitForSocket();
-				
-				//获得了socket开始处理
-				process(socket);
-			}
-		}catch(SocketTimeoutException e){
-			//读取socket超时，意味着可以结束长连接了
-			Logger.debug("长连接结束");
-		}catch (Exception e) {
-			e.printStackTrace();
-		}finally{
-			//进行善后工作
-			try {
-				//完成了socket的交互，结束连接
-				socket.close();
-				socket = null;
-				//调用connector来回收自己
-				connector.recycle(this);
-			} catch (IOException e) {
+		while( true ){
+			try{
+				while( !isStop ){
+					//先等待socket的到达
+					waitForSocket();
+					
+					//获得了socket开始处理
+					Logger.debug("processor获得了socket开始处理");
+					process(socket);
+				}
+			}catch(SocketTimeoutException e){
+				//读取socket超时，意味着可以结束长连接了
+				Logger.debug("长连接结束");
+			}catch (Exception e) {
 				e.printStackTrace();
+			}finally{
+				//进行善后工作
+				try {
+					//完成了socket的交互，结束连接
+					socket.close();
+					socket = null;
+					//调用connector来回收自己
+					connector.recycle(this);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
-			
 		}
 	}
 	
@@ -110,6 +112,8 @@ public class HttpProcessor implements Runnable, LifeCycle{
 			//互相关联request和response
 			request.setResponse(response);
 			response.setRequest(request);
+			
+			Logger.debug("请求的路径为："+request.getUri());
 			
 			//从现在开始交给container来处理后续的事情！
 			connector.getContainer().invoke(request, response);
