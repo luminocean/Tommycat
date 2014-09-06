@@ -59,7 +59,7 @@ public class FileHelper {
 	
 	private static String getFileLocationFromWebApp(String fullUri) {
 		//WebRoot由于是一个目录，所以最后会带上/
-		return Constants.WEB_ROOT+ fullUri;
+		return Constants.WEB_ROOT + fullUri;
 	}
 
 	

@@ -150,10 +150,6 @@ public class StandardContext extends ContainerBase implements Context {
 	@Override
 	public void setContextPath(String contexPath) {
 		this.contextPath = contexPath;
-		
-		/*if( !contexPath.endsWith("/") ){
-			this.contextPath = contexPath+"/";
-		}*/
 	}
 
 	@Override

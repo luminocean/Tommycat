@@ -25,10 +25,18 @@ public class ServerLauncher {
 		StandardWrapper wrapper1 = new StandardWrapper("servlet.MainServlet");
 		StandardWrapper wrapper2 = new StandardWrapper("servlet.ToyServlet");
 		
+		//WebApps目录下现在有的context文件夹名
+		//实际上应该有好多个，这里暂时放一个
+		String contextName = scanContext();
+		if( contextName == null ){
+			Logger.error("WebApps下没有检测到任何context，请确认是否配置了web项目！");
+			System.exit(0);
+		}
+		
 		//将wrapper放到context里面，并配置映射
 		StandardContext context = new StandardContext();
-		context.setContextPath("/mushroom"); //设置context的特有属性
-		context.setDocBase("Mushroom");
+		context.setContextPath("/" + contextName); //设置context的特有属性
+		context.setDocBase(contextName);
 		context.addChild(wrapper1);
 		context.addChild(wrapper2);
 		context.addServletMapping("/main", "servlet.MainServlet");
@@ -38,7 +46,6 @@ public class ServerLauncher {
 		//在这里添加的项目里面的servlet被编译后被eclipse默认放到了bin文件夹下，因此这里写的是bean
 		//如果是真实的web项目，那么应该是/build/classes
 		context.addRepository(Constants.WEB_APP_CLASS_PATH);
-		
 		
 		//connector将会针对每一个请求开启一个线程调用该container实例
 		connector.setContainer(context);
@@ -55,5 +62,22 @@ public class ServerLauncher {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * 检索WebApps根目录下的web项目，（暂时）返回第一个
+	 * @return
+	 */
+	private static String scanContext() {
+		File webApps = new File(Constants.WEB_ROOT);
+		
+		File[] files = webApps.listFiles();
+		for(File file: files){
+			if( file.isDirectory() ){
+				return file.getName();
+			}
+		}
+		
+		return null;
 	}
 }
