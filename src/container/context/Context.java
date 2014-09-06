@@ -20,4 +20,12 @@ public interface Context extends Container{
 	void repositoryUpdateNotify();
 	
 	SessionManager getSessionManager();
+	
+	public void setContextPath(String contexPath);
+
+	public String getContextPath();
+
+	public String getDocBase();
+
+	public void setDocBase(String docBase);
 }

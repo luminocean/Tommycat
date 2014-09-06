@@ -27,7 +27,7 @@ public class StandardContext extends ContainerBase implements Context {
 	//Context负责管理的Session管理器
 	private SessionManager sessionManager;
 	
-	//用于将来映射到该context所使用的路径，形如 /mushroom/
+	//用于将来映射到该context所使用的路径，形如 /mushroom
 	private String contextPath;
 	//该context真正对应的文件系统的文件夹名字,形如Mushroom，里面放置的是所有的web项目文件
 	private String docBase;
@@ -50,6 +50,7 @@ public class StandardContext extends ContainerBase implements Context {
 	 * 主要配置了专门由context使用的的basicContextValve和WebLoader
 	 */
 	public StandardContext() {
+		//设置context类的basicValue，这是context的核心部分，负责寻找wrapper完成分发
 		BasicContextValve basicValve = new BasicContextValve(this);
 		setBasicValve(basicValve);
 
@@ -146,14 +147,26 @@ public class StandardContext extends ContainerBase implements Context {
 		reload();
 	}
 	
-	public void setPath(String contexPath) {
+	@Override
+	public void setContextPath(String contexPath) {
 		this.contextPath = contexPath;
 		
-		if( !contexPath.endsWith("/") ){
+		/*if( !contexPath.endsWith("/") ){
 			this.contextPath = contexPath+"/";
-		}
+		}*/
 	}
 
+	@Override
+	public String getContextPath() {
+		return contextPath;
+	}
+
+	@Override
+	public String getDocBase() {
+		return docBase;
+	}
+
+	@Override
 	public void setDocBase(String docBase) {
 		this.docBase = docBase;
 	}

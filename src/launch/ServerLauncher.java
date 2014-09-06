@@ -26,8 +26,7 @@ public class ServerLauncher {
 		
 		//将wrapper放到context里面，并配置映射
 		StandardContext context = new StandardContext();
-		//设置context的独占属性
-		context.setPath("/mushroom");
+		context.setContextPath("/mushroom"); //设置context的特有属性
 		context.setDocBase("Mushroom");
 		context.addChild(wrapper1);
 		context.addChild(wrapper2);

@@ -23,6 +23,13 @@ public class ValveContext {
 	//当前正在处理第几个valve
 	private int currentPos = 0;
 	
+	/**
+	 * 其实说白了就是value一个一个的调用
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	public void invokeNext(Request request, Response response) 
 			throws ServletException, IOException {
 		int pos = currentPos++;

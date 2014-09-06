@@ -36,29 +36,40 @@ public class FileHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String getWebAppFileContent(String uri) throws Exception {
+	/*public static String getWebAppFileContent(String uri) throws Exception {
 		return getFileContent( getLocationInWebApp(uri) );
-	}
+	}*/
 
-	private static String getLocationInWebApp(String uri) {
+	/**
+	 * @param docBase 上下文路径 /docBase
+	 * @param uriToDocBase 相对于上下文的资源路径  /docBase[/resource]
+	 * @return
+	 */
+	private static String getFileLocationFromWebApp(String docBase, String uriToDocBase) {
 		String location = null;
 		//uri里面是带有根目录的/的（因为是请求），所以在拼接目录的时候应该去掉请求里面的根目录
-		if( uri.startsWith("/") )
-			location = uri.substring(1);
+		if( uriToDocBase.startsWith("/") )
+			location = uriToDocBase.substring(1);
 		else
-			location = uri;
+			location = uriToDocBase;
 		
+		return getFileLocationFromWebApp(docBase + uriToDocBase);
+	}
+	
+	
+	private static String getFileLocationFromWebApp(String fullUri) {
 		//WebRoot由于是一个目录，所以最后会带上/
-		return Constants.WEB_ROOT+ location;
+		return Constants.WEB_ROOT+ fullUri;
 	}
 
 	
 	/**
 	 * 判断当前web项目中是否有指定的资源
-	 * @param uri
+	 * @param docBase 在指定的web上下文中寻找
+	 * @param uriToDocBase 相对web项目根目录的资源位置
 	 */
-	public static boolean hasResource(String uri) {
-		String fileLocation = getLocationInWebApp(uri);
+	public static boolean hasResource(String docBase, String uriToDocBase) {
+		String fileLocation = getFileLocationFromWebApp(docBase, uriToDocBase);
 		
 		File file = new File(fileLocation);
 		
@@ -67,9 +78,12 @@ public class FileHelper {
 		return false;
 	}
 	
-	
-	public static void writeFileToStream(String uri, OutputStream stream) {
-		String fileLocation = getLocationInWebApp(uri);
+	/**
+	 * @param fullUri 全URI路径，比如 xxx:8080/mushroom/res
+	 * @param stream
+	 */
+	public static void writeFileToStream(String fullUri, OutputStream stream) {
+		String fileLocation = getFileLocationFromWebApp(fullUri);
 		
 		File file = new File(fileLocation);
 		
